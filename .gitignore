@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.env
+
+# Generated data and model artefacts (never commit SoccerMon data)
+data/raw/
+data/processed/
+artifacts/
+*.sqlite3
+
+# Notebook checkpoints and dashboards
+.ipynb_checkpoints/
+.streamlit/secrets.toml
+
+# Editors
+.vscode/
+.idea/
