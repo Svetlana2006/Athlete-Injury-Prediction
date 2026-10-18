@@ -19,7 +19,15 @@ import argparse
 import json
 from pathlib import Path
 import random
+import sys
 from typing import Any
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
+DATA_PATH = BASE_DIR / "data" / "processed" / "daily_observations.csv"
+ARTIFACTS_DIR = BASE_DIR / "artifacts"
 
 import numpy as np
 from sklearn.metrics import (
@@ -36,10 +44,6 @@ from torch.utils.data import DataLoader
 
 from app.ml.dataset import prepare_sequential_data
 from app.ml.model import AthleteInjuryRNN, TemperatureCalibrator
-
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-DATA_PATH = BASE_DIR / "data" / "processed" / "daily_observations.csv"
-ARTIFACTS_DIR = BASE_DIR / "artifacts"
 
 
 def set_seed(seed: int = 42) -> None:
