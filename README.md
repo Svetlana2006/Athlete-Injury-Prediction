@@ -9,7 +9,7 @@ An interpretable multimodal prototype for athlete workload, wellness, and injury
 - FastAPI backend with athlete, observation, injury, and risk-assessment APIs
 - Interpretable workload/wellness risk engine and factor explanations
 - Time-aware scikit-learn training pipeline with PR-AUC reporting
-- Streamlit dashboard, tests, and a Colab data-audit notebook
+- Streamlit dashboard and automated tests
 
 ## Local demo
 
@@ -24,9 +24,12 @@ uvicorn app.main:app --reload
 
 In another terminal run `streamlit run dashboard/app.py`.
 
-## Colab and GitHub
+## SoccerMon data
 
-Open `notebooks/01_soccer_mon_colab.ipynb` in Colab. It downloads only the small subjective archive on its first run. Raw and processed SoccerMon data are ignored by Git; the notebook creates a schema-only report that you may commit or upload to the chat for data-column mapping.
+- `data/subjective/` contains the extracted subjective CSVs for training load, wellness, injuries, illnesses, and game performance.
+- `data/derived/` contains the four per-athlete/per-session GPS summary CSVs for Team A and Team B in 2020 and 2021.
+
+The data comes from [SoccerMon on Zenodo](https://doi.org/10.5281/zenodo.10033832) and is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The large objective GPS archives are not included. To regenerate their summaries, download one archive at a time in Colab and keep the raw archives in Drive or the temporary Colab runtime.
 
 ## Main API routes
 
