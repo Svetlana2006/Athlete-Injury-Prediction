@@ -41,6 +41,7 @@ from sklearn.metrics import (
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
+from tqdm import tqdm
 
 from app.ml.dataset import prepare_sequential_data
 from app.ml.model import AthleteInjuryRNN, TemperatureCalibrator
@@ -142,12 +143,17 @@ def train_deep_pipeline(
     train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, drop_last=False)
     test_loader = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
 
-    # 2. Imbalance-Aware Loss Function (pos_weight)
+    # 2. Imbalance-Aware Loss Function
+    # Use sqrt of the class ratio capped at 15 to avoid gradient explosion.
+    # A raw ratio of ~60 makes the GRU over-penalise every missed injury and
+    # destroys learning — the sqrt heuristic is standard practice for severe imbalance.
     y_train_np = train_ds.targets.numpy()
     num_neg = (y_train_np == 0).sum()
     num_pos = (y_train_np == 1).sum()
-    pos_weight_val = max(1.0, float(num_neg / max(1, num_pos)))
-    print(f"Calculated positive class loss weight: {pos_weight_val:.2f}")
+    raw_ratio = float(num_neg / max(1, num_pos))
+    pos_weight_val = float(min(15.0, raw_ratio ** 0.5))
+    print(f"Class imbalance ratio            : {raw_ratio:.1f}  (neg/pos)")
+    print(f"Positive class loss weight (pw)  : {pos_weight_val:.2f}  (= sqrt ratio, capped at 15)")
 
     criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([pos_weight_val], device=device))
 
@@ -170,7 +176,13 @@ def train_deep_pipeline(
     for epoch in range(1, epochs + 1):
         model.train()
         total_loss = 0.0
-        for seqs, targets, _, _ in train_loader:
+        batch_bar = tqdm(
+            train_loader,
+            desc=f"Epoch {epoch:2d}/{epochs}",
+            unit="batch",
+            leave=False,
+        )
+        for seqs, targets, _, _ in batch_bar:
             seqs = seqs.to(device)
             targets = targets.to(device)
 
@@ -182,22 +194,22 @@ def train_deep_pipeline(
             optimizer.step()
 
             total_loss += loss.item() * len(targets)
+            batch_bar.set_postfix(loss=f"{loss.item():.4f}")
 
         scheduler.step()
         avg_train_loss = total_loss / len(train_ds)
 
-        # Quick validation evaluation
-        if epoch % 5 == 0 or epoch == epochs:
-            test_logits, test_y, _, _, _ = evaluate_model(model, test_loader, device)
-            test_probs = 1.0 / (1.0 + np.exp(-test_logits))
-            metrics = compute_metrics(test_y, test_probs)
-            print(
-                f"Epoch [{epoch:2d}/{epochs:2d}] "
-                f"Train Loss: {avg_train_loss:.4f} | "
-                f"Holdout PR-AUC: {metrics['pr_auc']:.4f} | "
-                f"ROC-AUC: {metrics['roc_auc']:.4f} | "
-                f"Top-10% Recall: {metrics['top10_recall']*100:.1f}%"
-            )
+        # Evaluate on holdout every epoch
+        test_logits, test_y, _, _, _ = evaluate_model(model, test_loader, device)
+        test_probs = 1.0 / (1.0 + np.exp(-test_logits))
+        metrics = compute_metrics(test_y, test_probs)
+        print(
+            f"Epoch [{epoch:2d}/{epochs:2d}] "
+            f"Loss: {avg_train_loss:.4f} | "
+            f"PR-AUC: {metrics['pr_auc']:.4f} | "
+            f"ROC-AUC: {metrics['roc_auc']:.4f} | "
+            f"Top-10% Recall: {metrics['top10_recall']*100:.1f}%"
+        )
 
     # 4. Calibration on Holdout Logits
     print("\n" + "=" * 62)

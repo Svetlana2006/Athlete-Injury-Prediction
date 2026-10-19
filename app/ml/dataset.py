@@ -141,9 +141,11 @@ def prepare_sequential_data(
 ) -> dict:
     """End-to-end data preparation:
     - Loads SoccerMon dataset
-    - Time-aware chronological train / test split
-    - Fits Imputer and Scaler ONLY on train data
-    - Builds sequences of shape (N, seq_len, num_features)
+    - Fits Imputer and Scaler on TRAINING rows only
+    - Transforms full dataset with train-fitted preprocessors
+    - Builds sequences on the FULL per-athlete timeline (critical: test
+      sequences get real historical lookback into the training period)
+    - Splits train / test sequences by prediction date (zero leakage)
     - Returns PyTorch datasets and preprocessing metadata
     """
     if not filepath.exists():
@@ -151,6 +153,7 @@ def prepare_sequential_data(
 
     df = pd.read_csv(filepath)
     df["date"] = pd.to_datetime(df["date"])
+    df = df.sort_values(["athlete_id", "date"]).reset_index(drop=True)
     available_features = [f for f in FEATURE_COLUMNS if f in df.columns]
 
     # Time-aware split date
@@ -161,27 +164,46 @@ def prepare_sequential_data(
         cutoff_idx = int(len(unique_dates) * split_ratio)
         cutoff = unique_dates.iloc[cutoff_idx]
 
-    train_df = df[df["date"] < cutoff].copy()
-    test_df = df[df["date"] >= cutoff].copy()
-
-    # Preprocessors fitted ONLY on training data
+    # Fit imputer and scaler on training rows only — never touch future
+    train_mask = df["date"] < cutoff
     imputer = SimpleImputer(strategy="median")
     scaler = StandardScaler()
 
-    train_df[available_features] = imputer.fit_transform(train_df[available_features])
-    train_df[available_features] = scaler.fit_transform(train_df[available_features])
-
-    # Transform test set with fitted train params
-    test_df[available_features] = imputer.transform(test_df[available_features])
-    test_df[available_features] = scaler.transform(test_df[available_features])
-
-    # Build sequences
-    X_train, y_train, train_athletes, train_dates = build_athlete_sequences(
-        train_df, seq_len=seq_len, feature_cols=available_features
+    df_features = df[available_features].copy()
+    df_features.iloc[train_mask.values] = imputer.fit_transform(
+        df_features.iloc[train_mask.values]
     )
-    X_test, y_test, test_athletes, test_dates = build_athlete_sequences(
-        test_df, seq_len=seq_len, feature_cols=available_features
+    df_features.iloc[~train_mask.values] = imputer.transform(
+        df_features.iloc[~train_mask.values]
     )
+    df_features.iloc[train_mask.values] = scaler.fit_transform(
+        df_features.iloc[train_mask.values]
+    )
+    df_features.iloc[~train_mask.values] = scaler.transform(
+        df_features.iloc[~train_mask.values]
+    )
+    df[available_features] = df_features
+
+    # Build sequences across the FULL per-athlete timeline
+    # The split is done on the PREDICTION DATE — not the row date.
+    # This ensures every test sequence has a real 14-day historical window.
+    all_X, all_y, all_athletes, all_dates = build_athlete_sequences(
+        df, seq_len=seq_len, feature_cols=available_features
+    )
+    all_dates_dt = pd.to_datetime(all_dates)
+
+    train_mask_seq = all_dates_dt < cutoff
+    test_mask_seq = all_dates_dt >= cutoff
+
+    X_train = all_X[train_mask_seq]
+    y_train = all_y[train_mask_seq]
+    train_athletes = [a for a, m in zip(all_athletes, train_mask_seq) if m]
+    train_dates = [d for d, m in zip(all_dates, train_mask_seq) if m]
+
+    X_test = all_X[test_mask_seq]
+    y_test = all_y[test_mask_seq]
+    test_athletes = [a for a, m in zip(all_athletes, test_mask_seq) if m]
+    test_dates = [d for d, m in zip(all_dates, test_mask_seq) if m]
 
     train_dataset = AthleteSequenceDataset(X_train, y_train, train_athletes, train_dates)
     test_dataset = AthleteSequenceDataset(X_test, y_test, test_athletes, test_dates)
