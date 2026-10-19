@@ -22,8 +22,10 @@ from app.models import Observation
 from app.schemas import Factor, RiskAssessment
 
 MODEL_PATH = Path(__file__).resolve().parent.parent.parent / "artifacts" / "deep_injury_model.pt"
+RF_MODEL_PATH = Path(__file__).resolve().parent.parent.parent / "artifacts" / "rf_injury_model.joblib"
 
 _CACHED_MODEL_BUNDLE: dict[str, Any] | None = None
+_CACHED_RF_BUNDLE: dict[str, Any] | None = None
 
 
 def _load_deep_model() -> dict[str, Any] | None:
@@ -65,6 +67,25 @@ def _load_deep_model() -> dict[str, Any] | None:
         return _CACHED_MODEL_BUNDLE
     except Exception as e:
         print(f"Warning: Could not load deep model ({e}). Using workload rules.")
+        return None
+
+
+def _load_rf_model() -> dict[str, Any] | None:
+    """Loads and caches the trained Random Forest model if present."""
+    global _CACHED_RF_BUNDLE
+    if _CACHED_RF_BUNDLE is not None:
+        return _CACHED_RF_BUNDLE
+
+    if not RF_MODEL_PATH.exists():
+        return None
+
+    try:
+        import joblib
+        bundle = joblib.load(RF_MODEL_PATH)
+        _CACHED_RF_BUNDLE = bundle
+        return _CACHED_RF_BUNDLE
+    except Exception as e:
+        print(f"Warning: Could not load classical RF model ({e}).")
         return None
 
 
@@ -199,6 +220,45 @@ def calculate_assessment(
                 )
         except Exception as e:
             print(f"Inference error with deep model: {e}")
+
+    # 4. Classical Random Forest Model (if deep model was not applied and RF exists)
+    if model_prob is None and records:
+        rf_bundle = _load_rf_model()
+        if rf_bundle is not None:
+            try:
+                latest = records[-1]
+                feature_cols = rf_bundle["feature_cols"]
+                row_dict = {
+                    "duration_minutes": latest.duration_minutes or 0.0,
+                    "session_rpe": latest.session_rpe or 0.0,
+                    "daily_load": (latest.session_rpe or 0.0) * (latest.duration_minutes or 0.0),
+                    "fatigue": latest.fatigue or 5.0,
+                    "soreness": latest.soreness or 5.0,
+                    "sleep_duration": latest.sleep_hours or 7.5,
+                    "total_distance_m": latest.total_distance_m or 0.0,
+                    "high_speed_distance_m": latest.high_speed_distance_m or 0.0,
+                    "days_since_last_injury": 730.0,
+                }
+                if latest.sport_metrics:
+                    row_dict.update(latest.sport_metrics)
+
+                row_vec = np.array([[float(row_dict.get(c, 0.0) or 0.0) for c in feature_cols]])
+                row_imp = rf_bundle["imputer"].transform(row_vec)
+                row_scaled = rf_bundle["scaler"].transform(row_imp)
+                rf_prob = float(rf_bundle["model"].predict_proba(row_scaled)[0, 1])
+                model_prob = round(rf_prob, 4)
+
+                score = round(0.5 * score + 0.5 * (model_prob * 100), 1)
+                if model_prob > 0.05:
+                    factors.append(
+                        Factor(
+                            name="rf_injury_alert",
+                            value=round(model_prob * 100, 1),
+                            message=f"Random Forest ensemble model estimated injury risk probability at {model_prob*100:.1f}%.",
+                        )
+                    )
+            except Exception as e:
+                print(f"Inference error with RF model: {e}")
 
     # Fallback status message if no elevated factors
     if not factors and records:

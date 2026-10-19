@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-10-19T12:46:38.881972",
+  "cutoff_date": "2021-08-07",
+  "baseline_injury_rate": 0.004561449237586342,
+  "models": {
+    "Logistic Regression (Balanced)": {
+      "roc_auc": 0.719713462761381,
+      "pr_auc": 0.01358798857193855,
+      "brier_score": 0.11239065401005953,
+      "top10_recall": 0.37142857142857144,
+      "top10_precision": 0.016927083333333332
+    },
+    "Random Forest (Balanced, max_depth=6)": {
+      "roc_auc": 0.7673063255152807,
+      "pr_auc": 0.014326547141210969,
+      "brier_score": 0.06154568971023663,
+      "top10_recall": 0.4857142857142857,
+      "top10_precision": 0.022135416666666668
+    },
+    "HistGradientBoosting (Balanced)": {
+      "roc_auc": 0.5353832342049153,
+      "pr_auc": 0.005039732922441291,
+      "brier_score": 0.029059622524450487,
+      "top10_recall": 0.14285714285714285,
+      "top10_precision": 0.0036153289949385392
+    },
+    "LSTM + Temporal Attention": {
+      "pr_auc": 0.005293832829462915,
+      "roc_auc": 0.591679501145712,
+      "brier_score": 0.0077244977879576005,
+      "top10_recall": 0.0,
+      "top10_precision": 0.0,
+      "top10_f1": 0.0,
+      "baseline_injury_rate": 0.004580552224069834
+    }
+  },
+  "top_features": {
+    "days_since_last_injury": 0.3310171417212931,
+    "prior_injury_count": 0.20822097539463424,
+    "readiness": 0.06459565786853239,
+    "ctl42": 0.052547080216499974,
+    "acwr": 0.051413541284450255,
+    "composite_wellness": 0.029677549668679006,
+    "ctl28": 0.029611047197645235,
+    "fatigue_trend_7d": 0.026710277734580387,
+    "strain": 0.025587209402971885,
+    "atl": 0.02537927414093201,
+    "monotony": 0.022904236382666292,
+    "weekly_load": 0.022072107357124122,
+    "soreness_trend_7d": 0.014760926191483498,
+    "sleep_quality": 0.008775749439195485,
+    "mean_speed_m_s": 0.00867536366948381
+  }
+}

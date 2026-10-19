@@ -169,19 +169,26 @@ def prepare_sequential_data(
     imputer = SimpleImputer(strategy="median")
     scaler = StandardScaler()
 
-    df_features = df[available_features].copy()
-    df_features.iloc[train_mask.values] = imputer.fit_transform(
-        df_features.iloc[train_mask.values]
-    )
-    df_features.iloc[~train_mask.values] = imputer.transform(
-        df_features.iloc[~train_mask.values]
-    )
-    df_features.iloc[train_mask.values] = scaler.fit_transform(
-        df_features.iloc[train_mask.values]
-    )
-    df_features.iloc[~train_mask.values] = scaler.transform(
-        df_features.iloc[~train_mask.values]
-    )
+    df_features = df[available_features].astype(np.float64).copy()
+
+    # Domain imputation:
+    # For athletes with 0 prior injuries, days_since_last_injury is NaN.
+    # Filling with median falsely marks them as having an injury ~45 days ago.
+    # Fill with 730.0 (2 years = uninjured baseline) to preserve clean signal.
+    if "days_since_last_injury" in df_features.columns:
+        df_features["days_since_last_injury"] = df_features["days_since_last_injury"].fillna(730.0)
+
+    train_indices = df_features.index[train_mask]
+    test_indices = df_features.index[~train_mask]
+
+    train_imputed = imputer.fit_transform(df_features.loc[train_indices])
+    test_imputed = imputer.transform(df_features.loc[test_indices])
+
+    train_scaled = scaler.fit_transform(train_imputed)
+    test_scaled = scaler.transform(test_imputed)
+
+    df_features.loc[train_indices] = train_scaled
+    df_features.loc[test_indices] = test_scaled
     df[available_features] = df_features
 
     # Build sequences across the FULL per-athlete timeline
