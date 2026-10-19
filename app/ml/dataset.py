@@ -149,7 +149,10 @@ def prepare_sequential_data(
     - Returns PyTorch datasets and preprocessing metadata
     """
     if not filepath.exists():
-        raise FileNotFoundError(f"Processed dataset not found at {filepath}")
+        print(f"Processed dataset not found at {filepath}.")
+        print("Automatically triggering data/pipeline.py to build it from raw data...")
+        from data.pipeline import main as run_pipeline
+        run_pipeline()
 
     df = pd.read_csv(filepath)
     df["date"] = pd.to_datetime(df["date"])

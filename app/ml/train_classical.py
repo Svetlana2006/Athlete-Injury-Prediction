@@ -76,7 +76,10 @@ def train_and_evaluate_classical(
     split_date: str | None = None,
 ) -> dict:
     if not filepath.exists():
-        raise FileNotFoundError(f"Processed dataset not found at {filepath}")
+        print(f"Processed dataset not found at {filepath}.")
+        print("Automatically triggering data/pipeline.py to build it from raw data...")
+        from data.pipeline import main as run_pipeline
+        run_pipeline()
 
     print("=" * 66)
     print("   ATHLETE INJURY PREDICTION: CLASSICAL ML BENCHMARK")
