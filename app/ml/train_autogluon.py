@@ -81,8 +81,11 @@ def train_autogluon(
     eval_metric: str = "roc_auc",
 ) -> None:
     try:
-        from autogluon.tabular import TabularDataset, TabularPredictor
-    except ImportError:
+        import importlib
+        ag_tab = importlib.import_module("autogluon.tabular")
+        TabularDataset = getattr(ag_tab, "TabularDataset")
+        TabularPredictor = getattr(ag_tab, "TabularPredictor")
+    except (ImportError, ModuleNotFoundError):
         print("=" * 66)
         print("ERROR: AutoGluon is not installed.")
         print("Please install AutoGluon by running:")
