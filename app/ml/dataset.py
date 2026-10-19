@@ -59,7 +59,10 @@ FEATURE_COLUMNS = [
     # Clinical & Injury History
     "prior_injury_count",
     "days_since_last_injury",
+    "has_prior_injury",
     "illness_last_7d",
+    "is_rest_day",
+    "has_gps",
 ]
 
 TARGET_COL = "injury_next_7d"

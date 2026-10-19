@@ -202,14 +202,14 @@ def engineer_features(
     injuries: pd.DataFrame,
     illness: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Compute all derived analytical features on the merged dataset.
+    """Compute all derived analytical features and perform sports-science domain imputation.
 
     Groups of features:
-      • Workload  — load change %, validation of ACWR
-      • Wellness  — composite score, sleep deficit, rolling trends, delta
-      • GPS       — HSR ratio, distance change %
-      • History   — prior injury count, days since last injury, illness flag,
-                    days since rest
+      • Workload  — load change %, validation of ACWR, rest-day imputation
+      • Wellness  — forward-fill timeline continuity, baseline imputation, composite score
+      • GPS       — non-monitored day zero-filling, HSR ratio, distance change %
+      • History   — prior injury count, days since last injury (730d uninjured baseline),
+                    illness flag, days since rest
       • Target    — injury_next_7d (binary label)
     """
     df = merged.sort_values(["athlete_id", "date"]).reset_index(drop=True)
@@ -218,75 +218,101 @@ def engineer_features(
     df["team"] = df["athlete_id"].str.extract(r"^(Team[AB])", expand=False)
 
     # ────────────────────────────── WORKLOAD ──────────────────────────────
+    # Rest days have 0 duration and 0 session RPE
+    session_cols = ["duration_minutes", "session_rpe", "session_count", "rpe"]
+    for c in session_cols:
+        if c in df.columns:
+            df[c] = df[c].fillna(0.0)
 
-    if "daily_load" in df.columns:
-        # Week-over-week load change %
-        rolling_7d = df.groupby("athlete_id")["daily_load"].transform(
-            lambda x: x.rolling(7, min_periods=1).sum()
-        )
-        prev_7d = df.groupby("athlete_id")["daily_load"].transform(
-            lambda x: x.rolling(7, min_periods=1).sum().shift(7)
-        )
-        df["load_change_pct"] = (
-            (rolling_7d - prev_7d) / prev_7d.replace(0, np.nan) * 100
-        )
+    # Pre-computed workload metrics (daily_load, acwr, atl, ctl, monotony, strain)
+    load_metrics = [
+        "daily_load", "acwr", "atl", "ctl28", "ctl42", "monotony", "strain", "weekly_load"
+    ]
+    for c in load_metrics:
+        if c in df.columns:
+            df[c] = df.groupby("athlete_id")[c].ffill()
+            df[c] = df[c].fillna(0.0)
+
+    # Explicit rest day flag (load == 0)
+    df["is_rest_day"] = ((df["daily_load"] == 0.0) & (df["duration_minutes"] == 0.0)).astype(int)
+
+    # Week-over-week load change % (fill baseline zeros with 0.0)
+    rolling_7d = df.groupby("athlete_id")["daily_load"].transform(
+        lambda x: x.rolling(7, min_periods=1).sum()
+    )
+    prev_7d = df.groupby("athlete_id")["daily_load"].transform(
+        lambda x: x.rolling(7, min_periods=1).sum().shift(7)
+    )
+    df["load_change_pct"] = (
+        (rolling_7d - prev_7d) / prev_7d.replace(0, np.nan) * 100
+    ).fillna(0.0).clip(-100.0, 500.0)
+
+    # ──────────────────────────── GPS / MOVEMENT ─────────────────────────
+    # On non-GPS / rest days, movement metrics are 0.0
+    gps_cols = [
+        "gps_samples", "max_speed_m_s", "total_distance_m",
+        "high_speed_distance_m", "sprint_distance_m", "mean_speed_m_s"
+    ]
+    for c in gps_cols:
+        if c in df.columns:
+            df[c] = df[c].fillna(0.0)
+
+    df["has_gps"] = (df["total_distance_m"] > 0).astype(int)
+
+    # High-speed running ratio
+    denom_dist = df["total_distance_m"].replace(0, np.nan)
+    df["hsr_ratio"] = (df["high_speed_distance_m"] / denom_dist).fillna(0.0)
+
+    # 7-day distance change %
+    dist_7d = df.groupby("athlete_id")["total_distance_m"].transform(
+        lambda x: x.rolling(7, min_periods=1).sum()
+    )
+    prev_dist = df.groupby("athlete_id")["total_distance_m"].transform(
+        lambda x: x.rolling(7, min_periods=1).sum().shift(7)
+    )
+    df["distance_change_pct"] = (
+        (dist_7d - prev_dist) / prev_dist.replace(0, np.nan) * 100
+    ).fillna(0.0).clip(-100.0, 500.0)
 
     # ────────────────────────────── WELLNESS ──────────────────────────────
-
-    # Composite wellness score
-    wellness_cols = [
-        "fatigue", "soreness", "mood", "readiness", "sleep_quality", "stress"
+    # Wellness carryover: forward-fill recent physical state up to 7 days,
+    # then athlete baseline median, then default neutral baseline (5.0, sleep 8.0)
+    wellness_base_cols = [
+        "fatigue", "soreness", "mood", "readiness", "sleep_duration", "sleep_quality", "stress"
     ]
-    available_w = [c for c in wellness_cols if c in df.columns]
-    if available_w:
-        df["composite_wellness"] = df[available_w].mean(axis=1)
+    for c in wellness_base_cols:
+        if c in df.columns:
+            df[c] = df.groupby("athlete_id")[c].ffill()
+            ath_median = df.groupby("athlete_id")[c].transform("median")
+            df[c] = df[c].fillna(ath_median)
+            default_val = 8.0 if c == "sleep_duration" else 5.0
+            df[c] = df[c].fillna(default_val)
 
-    # Sleep deficit (hours below the recommended 8 h)
-    if "sleep_duration" in df.columns:
-        df["sleep_deficit"] = (8.0 - df["sleep_duration"]).clip(lower=0)
+    # Composite wellness score (1-10)
+    core_wellness = ["fatigue", "soreness", "mood", "readiness", "sleep_quality", "stress"]
+    df["composite_wellness"] = df[core_wellness].mean(axis=1)
+
+    # Sleep deficit (hours below 8h)
+    df["sleep_deficit"] = (8.0 - df["sleep_duration"]).clip(lower=0)
 
     # Rolling 7-day trends for fatigue and soreness
     for col in ("fatigue", "soreness"):
-        if col in df.columns:
-            df[f"{col}_trend_7d"] = df.groupby("athlete_id")[col].transform(
-                lambda x: x.rolling(7, min_periods=1).mean()
-            )
-
-    # Wellness delta (today vs personal 28-day baseline)
-    if "composite_wellness" in df.columns:
-        baseline_28d = df.groupby("athlete_id")["composite_wellness"].transform(
-            lambda x: x.rolling(28, min_periods=7).mean()
-        )
-        df["wellness_delta"] = df["composite_wellness"] - baseline_28d
-
-    # ──────────────────────────── GPS / MOVEMENT ─────────────────────────
-
-    # High-speed running ratio
-    if {"high_speed_distance_m", "total_distance_m"} <= set(df.columns):
-        df["hsr_ratio"] = (
-            df["high_speed_distance_m"]
-            / df["total_distance_m"].replace(0, np.nan)
+        df[f"{col}_trend_7d"] = df.groupby("athlete_id")[col].transform(
+            lambda x: x.rolling(7, min_periods=1).mean()
         )
 
-    # 7-day distance change %
-    if "total_distance_m" in df.columns:
-        dist_7d = df.groupby("athlete_id")["total_distance_m"].transform(
-            lambda x: x.rolling(7, min_periods=1).sum()
-        )
-        prev_dist = df.groupby("athlete_id")["total_distance_m"].transform(
-            lambda x: x.rolling(7, min_periods=1).sum().shift(7)
-        )
-        df["distance_change_pct"] = (
-            (dist_7d - prev_dist) / prev_dist.replace(0, np.nan) * 100
-        )
+    # Wellness delta (today vs athlete's 28-day personal rolling baseline)
+    baseline_28d = df.groupby("athlete_id")["composite_wellness"].transform(
+        lambda x: x.rolling(28, min_periods=1).mean()
+    )
+    df["wellness_delta"] = (df["composite_wellness"] - baseline_28d).fillna(0.0)
 
     # ────────────────────────────── HISTORY ───────────────────────────────
-
     inj_events = injuries[["athlete_id", "date"]].drop_duplicates()
 
-    # Prior injury count & days since last injury
     df["prior_injury_count"] = 0
-    df["days_since_last_injury"] = np.nan
+    # Clean uninjured baseline: 730 days (2 years injury-free)
+    df["days_since_last_injury"] = 730.0
 
     for athlete_id in df["athlete_id"].unique():
         a_mask = df["athlete_id"] == athlete_id
@@ -300,7 +326,9 @@ def engineer_features(
             past = [d for d in a_inj_dates if d < cur]
             df.loc[idx, "prior_injury_count"] = len(past)
             if past:
-                df.loc[idx, "days_since_last_injury"] = (cur - max(past)).days
+                df.loc[idx, "days_since_last_injury"] = float((cur - max(past)).days)
+
+    df["has_prior_injury"] = (df["prior_injury_count"] > 0).astype(int)
 
     # Illness flag: athlete was sick within the previous 7 days
     illness_events = illness[["athlete_id", "date"]].drop_duplicates()
@@ -314,18 +342,15 @@ def engineer_features(
         df.loc[mask, "illness_last_7d"] = 1
 
     # Days since rest — consecutive training days (load > 0)
-    if "daily_load" in df.columns:
-        df["days_since_rest"] = 0
-        for _, grp in df.groupby("athlete_id"):
-            streak = 0
-            for idx in grp.index:
-                val = df.loc[idx, "daily_load"]
-                streak = streak + 1 if (pd.notna(val) and val > 0) else 0
-                df.loc[idx, "days_since_rest"] = streak
+    df["days_since_rest"] = 0
+    for _, grp in df.groupby("athlete_id"):
+        streak = 0
+        for idx in grp.index:
+            val = df.loc[idx, "daily_load"]
+            streak = streak + 1 if (pd.notna(val) and val > 0) else 0
+            df.loc[idx, "days_since_rest"] = streak
 
     # ────────────────────────────── TARGET ────────────────────────────────
-
-    # injury_next_7d: 1 if an injury record falls within the next 1..7 days
     df["injury_next_7d"] = 0
     for _, inj_row in inj_events.iterrows():
         mask = (
