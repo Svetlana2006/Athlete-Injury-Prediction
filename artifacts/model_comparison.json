@@ -4,11 +4,12 @@
   "baseline_injury_rate": 0.004561449237586342,
   "models": {
     "Logistic Regression (Balanced)": {
-      "roc_auc": 0.5923914263270116,
-      "pr_auc": 0.010583423584510582,
-      "brier_score": 0.1017731943106996,
+      "pr_auc": 0.010583004307821043,
+      "roc_auc": 0.5923839449369693,
+      "brier_score": 0.10177339122238405,
       "top10_recall": 0.42857142857142855,
-      "top10_precision": 0.01953125
+      "top10_precision": 0.01953125,
+      "top10_f1": 0.037359900373599
     },
     "Random Forest (Balanced, max_depth=6)": {
       "roc_auc": 0.7153480716717165,
@@ -18,11 +19,12 @@
       "top10_precision": 0.016927083333333332
     },
     "HistGradientBoosting (Balanced)": {
-      "roc_auc": 0.6180039651367223,
       "pr_auc": 0.006671138782731432,
+      "roc_auc": 0.6180039651367223,
       "brier_score": 0.024438370676491364,
       "top10_recall": 0.14285714285714285,
-      "top10_precision": 0.006053268765133172
+      "top10_precision": 0.006053268765133172,
+      "top10_f1": 0.011614401858304297
     },
     "LSTM + Temporal Attention": {
       "pr_auc": 0.005293832829462915,
@@ -32,6 +34,30 @@
       "top10_precision": 0.0,
       "top10_f1": 0.0,
       "baseline_injury_rate": 0.004580552224069834
+    },
+    "Random Forest (Balanced)": {
+      "pr_auc": 0.011199637458070634,
+      "roc_auc": 0.7163730221075074,
+      "brier_score": 0.06571353558155324,
+      "top10_recall": 0.4,
+      "top10_precision": 0.018229166666666668,
+      "top10_f1": 0.034869240348692404
+    },
+    "Extra Trees (Balanced)": {
+      "pr_auc": 0.02160874121862207,
+      "roc_auc": 0.8470953503160886,
+      "brier_score": 0.10191910522046284,
+      "top10_recall": 0.6,
+      "top10_precision": 0.02734375,
+      "top10_f1": 0.052303860523038606
+    },
+    "Stacking / Blend Ensemble (Top 3)": {
+      "pr_auc": 0.013752621455491299,
+      "roc_auc": 0.7806231997905211,
+      "brier_score": 0.0502929075064729,
+      "top10_recall": 0.45714285714285713,
+      "top10_precision": 0.020833333333333332,
+      "top10_f1": 0.039850560398505604
     }
   },
   "top_features": {

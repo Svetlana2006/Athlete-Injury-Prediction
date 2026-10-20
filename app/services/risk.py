@@ -22,6 +22,7 @@ from app.models import Observation
 from app.schemas import Factor, RiskAssessment
 
 MODEL_PATH = Path(__file__).resolve().parent.parent.parent / "artifacts" / "deep_injury_model.pt"
+BEST_MODEL_PATH = Path(__file__).resolve().parent.parent.parent / "artifacts" / "best_injury_model.joblib"
 RF_MODEL_PATH = Path(__file__).resolve().parent.parent.parent / "artifacts" / "rf_injury_model.joblib"
 
 _CACHED_MODEL_BUNDLE: dict[str, Any] | None = None
@@ -71,17 +72,18 @@ def _load_deep_model() -> dict[str, Any] | None:
 
 
 def _load_rf_model() -> dict[str, Any] | None:
-    """Loads and caches the trained Random Forest model if present."""
+    """Loads and caches the trained tree ensemble (ExtraTrees or RandomForest) if present."""
     global _CACHED_RF_BUNDLE
     if _CACHED_RF_BUNDLE is not None:
         return _CACHED_RF_BUNDLE
 
-    if not RF_MODEL_PATH.exists():
+    target_path = BEST_MODEL_PATH if BEST_MODEL_PATH.exists() else RF_MODEL_PATH
+    if not target_path.exists():
         return None
 
     try:
         import joblib
-        bundle = joblib.load(RF_MODEL_PATH)
+        bundle = joblib.load(target_path)
         _CACHED_RF_BUNDLE = bundle
         return _CACHED_RF_BUNDLE
     except Exception as e:
