@@ -158,7 +158,7 @@ def train_autogluon(
     # Evaluate best predictor
     probs = predictor.predict_proba(test_df.drop(columns=[TARGET_COL]))[1].values
     best_metrics = compute_metrics(y_test, probs)
-    best_model_name = predictor.get_model_best()
+    best_model_name = predictor.model_best
 
     print("\n" + "=" * 66)
     print(f"WINNING MODEL: {best_model_name}")
