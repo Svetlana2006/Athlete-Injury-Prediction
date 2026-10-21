@@ -53,6 +53,29 @@ def set_seed(seed: int = 42) -> None:
     torch.manual_seed(seed)
 
 
+class FocalLoss(nn.Module):
+    """Focal Loss for severe class imbalance (Lin et al. 2017).
+
+    Down-weights easy negatives so gradient flows from hard pre-injury examples.
+    alpha=0.25, gamma=2.0 are the canonical defaults from the RetinaNet paper.
+    """
+
+    def __init__(self, alpha: float = 0.25, gamma: float = 2.0) -> None:
+        super().__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+
+    def forward(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        bce = nn.functional.binary_cross_entropy_with_logits(
+            logits, targets, reduction="none"
+        )
+        probs = torch.sigmoid(logits)
+        # pt = probability of the TRUE class
+        pt = torch.where(targets == 1, probs, 1.0 - probs)
+        focal_weight = self.alpha * (1.0 - pt) ** self.gamma
+        return (focal_weight * bce).mean()
+
+
 def evaluate_model(
     model: nn.Module,
     loader: DataLoader,
@@ -159,7 +182,12 @@ def train_deep_pipeline(
     print(f"Class imbalance ratio            : {raw_ratio:.1f}  (neg/pos)")
     print(f"Positive class loss weight (pw)  : {pos_weight_val:.2f}  (= raw ratio, capped at 30)")
 
-    criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([pos_weight_val], device=device))
+    # Tier-2 improvement: Focal Loss instead of BCEWithLogitsLoss.
+    # Focal Loss automatically suppresses gradient from easy healthy days
+    # (which the model already predicts correctly) so training focuses on
+    # the hard ambiguous pre-injury examples that actually matter.
+    criterion = FocalLoss(alpha=0.25, gamma=2.0)
+    print(f"Loss function                    : FocalLoss(alpha=0.25, gamma=2.0)")
 
     # 3. Model & Optimizer
     model = AthleteInjuryRNN(

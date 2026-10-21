@@ -247,6 +247,34 @@ def engineer_features(
         (rolling_7d - prev_7d) / prev_7d.replace(0, np.nan) * 100
     ).fillna(0.0).clip(-100.0, 500.0)
 
+    # ── ACWR danger zone & weekly spike (Gabbett threshold) ──────────────
+    # acwr_danger: 1 when ACWR > 1.5 ("red zone" per Gabbett 2016)
+    # acwr_spike:  week-on-week change in ACWR — sudden jumps predict injury
+    if "acwr" in df.columns:
+        df["acwr_danger"] = (df["acwr"] > 1.5).astype(int)
+        df["acwr_spike"] = (
+            df.groupby("athlete_id")["acwr"]
+            .transform(lambda x: x - x.shift(7))
+        ).fillna(0.0)
+
+    # ── Consecutive high-load streak ──────────────────────────────────────
+    # Counts how many consecutive days the athlete trained above their own
+    # personal median load — sustained high-effort blocks drive injury risk.
+    if "daily_load" in df.columns:
+        ath_median_load = df.groupby("athlete_id")["daily_load"].transform("median")
+        df["above_median_load"] = (df["daily_load"] > ath_median_load).astype(int)
+
+        streak_vals = np.zeros(len(df), dtype=np.float32)
+        for ath_id, grp in df.groupby("athlete_id"):
+            streak = 0
+            for idx in grp.index:
+                if df.loc[idx, "above_median_load"] == 1:
+                    streak += 1
+                else:
+                    streak = 0
+                streak_vals[idx] = streak
+        df["high_load_streak"] = streak_vals
+
     # ──────────────────────────── GPS / MOVEMENT ─────────────────────────
     # On non-GPS / rest days, movement metrics are 0.0
     gps_cols = [
@@ -306,6 +334,16 @@ def engineer_features(
         lambda x: x.rolling(28, min_periods=1).mean()
     )
     df["wellness_delta"] = (df["composite_wellness"] - baseline_28d).fillna(0.0)
+
+    # ── Athlete-relative z-scores ─────────────────────────────────────────
+    # A fatigue score of 7 means different things for different athletes.
+    # z-scoring within each athlete's own history gives the model a
+    # "deviation from normal" signal that generalises across seasons.
+    for col in ("fatigue", "soreness", "daily_load", "acwr"):
+        if col in df.columns:
+            grp_mean = df.groupby("athlete_id")[col].transform("mean")
+            grp_std  = df.groupby("athlete_id")[col].transform("std").replace(0, 1.0)
+            df[f"{col}_athlete_z"] = ((df[col] - grp_mean) / grp_std).fillna(0.0)
 
     # ────────────────────────────── HISTORY ───────────────────────────────
     inj_events = injuries[["athlete_id", "date"]].drop_duplicates()

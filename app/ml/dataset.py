@@ -36,6 +36,11 @@ FEATURE_COLUMNS = [
     "duration_minutes",
     "session_rpe",
     "days_since_rest",
+    # Tier 2: ACWR danger zone & spike
+    "acwr_danger",        # binary: ACWR > 1.5 (Gabbett red zone)
+    "acwr_spike",         # week-on-week ACWR change (sudden jump signal)
+    # Tier 2: Consecutive load streak
+    "high_load_streak",   # consecutive days above athlete's personal median load
     # Wellness
     "fatigue",
     "soreness",
@@ -63,6 +68,11 @@ FEATURE_COLUMNS = [
     "illness_last_7d",
     "is_rest_day",
     "has_gps",
+    # Tier 2: Athlete-relative z-scores (deviation from own baseline)
+    "fatigue_athlete_z",  # fatigue relative to this athlete's own mean/std
+    "soreness_athlete_z", # soreness relative to this athlete's own mean/std
+    "daily_load_athlete_z",  # load relative to this athlete's own mean/std
+    "acwr_athlete_z",        # ACWR relative to this athlete's own mean/std
 ]
 
 TARGET_COL = "injury_next_7d"
