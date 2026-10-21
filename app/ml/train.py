@@ -151,9 +151,13 @@ def train_deep_pipeline(
     num_neg = (y_train_np == 0).sum()
     num_pos = (y_train_np == 1).sum()
     raw_ratio = float(num_neg / max(1, num_pos))
-    pos_weight_val = float(min(15.0, raw_ratio ** 0.5))
+    # Tier-1 improvement: use the raw imbalance ratio (not sqrt) capped at 30.
+    # With a ~70:1 neg/pos ratio and 1.4% injury rate, sqrt gives only ~8.4
+    # which under-penalises missed injuries. The full ratio up to cap of 30
+    # forces the model to weight positives much more aggressively.
+    pos_weight_val = float(min(30.0, raw_ratio))
     print(f"Class imbalance ratio            : {raw_ratio:.1f}  (neg/pos)")
-    print(f"Positive class loss weight (pw)  : {pos_weight_val:.2f}  (= sqrt ratio, capped at 15)")
+    print(f"Positive class loss weight (pw)  : {pos_weight_val:.2f}  (= raw ratio, capped at 30)")
 
     criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([pos_weight_val], device=device))
 

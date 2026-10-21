@@ -351,14 +351,32 @@ def engineer_features(
             df.loc[idx, "days_since_rest"] = streak
 
     # ────────────────────────────── TARGET ────────────────────────────────
+    # Step 1: Default label = 0 (healthy)
     df["injury_next_7d"] = 0
+
+    # Step 2: Label the 7 days *before* each injury as positive (1)
     for _, inj_row in inj_events.iterrows():
-        mask = (
+        pre_injury_mask = (
             (df["athlete_id"] == inj_row["athlete_id"])
             & (df["date"] >= inj_row["date"] - pd.Timedelta(days=HORIZON_DAYS))
             & (df["date"] < inj_row["date"])
         )
-        df.loc[mask, "injury_next_7d"] = 1
+        df.loc[pre_injury_mask, "injury_next_7d"] = 1
+
+    # Step 3: Blackout — NaN out the injury date itself and the 2 days after.
+    # These rows have forward-filled wellness/GPS from *after* the injury
+    # event, making them contaminated.  Setting NaN tells the dataset builder
+    # to drop them, preventing label leakage into training.
+    for _, inj_row in inj_events.iterrows():
+        blackout_mask = (
+            (df["athlete_id"] == inj_row["athlete_id"])
+            & (df["date"] >= inj_row["date"])
+            & (df["date"] <= inj_row["date"] + pd.Timedelta(days=2))
+        )
+        df.loc[blackout_mask, "injury_next_7d"] = np.nan
+
+    n_blacked_out = int(df["injury_next_7d"].isna().sum())
+    print(f"      Blackout rows (injury day + 2d post-injury): {n_blacked_out}")
 
     return df
 
