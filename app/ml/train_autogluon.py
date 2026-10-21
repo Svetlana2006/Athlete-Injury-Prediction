@@ -222,12 +222,16 @@ def main() -> None:
     parser.add_argument("--time-limit", type=int, default=300, help="Training time limit in seconds (default: 300)")
     parser.add_argument("--presets", type=str, default="medium_quality", choices=["medium_quality", "high_quality", "best_quality"], help="AutoGluon preset")
     parser.add_argument("--eval-metric", type=str, default="roc_auc", help="Evaluation metric (default: roc_auc)")
+    parser.add_argument("--split-date", type=str, default=None, help="Explicit train/test cutoff date YYYY-MM-DD (recommended: 2021-01-01 for season split)")
+    parser.add_argument("--split-ratio", type=float, default=0.80, help="Train/test temporal split ratio if no --split-date given (default: 0.80)")
     args = parser.parse_args()
 
     train_autogluon(
         time_limit=args.time_limit,
         presets=args.presets,
         eval_metric=args.eval_metric,
+        split_date=args.split_date,
+        split_ratio=args.split_ratio,
     )
 
 
