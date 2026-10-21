@@ -1,65 +1,65 @@
 {
-  "timestamp": "2026-10-20T06:26:38.739454",
+  "timestamp": "2026-10-21T16:56:31.714362",
   "winning_model": "WeightedEnsemble_L2",
   "metrics": {
-    "pr_auc": 0.007781178917277816,
-    "roc_auc": 0.6941345902068605,
-    "brier_score": 0.005421438653628018,
-    "top10_recall": 0.17142857142857143,
-    "top10_precision": 0.0078125,
-    "top10_f1": 0.014943960149439602
+    "pr_auc": 0.00871393110368793,
+    "roc_auc": 0.7056389497947939,
+    "brier_score": 0.004683866062034771,
+    "top10_recall": 0.2,
+    "top10_precision": 0.009138381201044387,
+    "top10_f1": 0.017478152309612985
   },
-  "baseline_injury_rate": 0.004561449237586342,
+  "baseline_injury_rate": 0.004570383912248629,
   "leaderboard": [
     {
-      "model": "RandomForestGini",
-      "score_test": 0.9097258070549508,
-      "pred_time_test": 0.18692803382873535
-    },
-    {
-      "model": "ExtraTreesEntr",
-      "score_test": 0.8936950585418771,
-      "pred_time_test": 0.19368219375610352
-    },
-    {
       "model": "ExtraTreesGini",
-      "score_test": 0.882949912093667,
-      "pred_time_test": 0.18846487998962402
+      "score_test": 0.8797024043777292,
+      "pred_time_test": 0.18419122695922852
+    },
+    {
+      "model": "RandomForestGini",
+      "score_test": 0.8632278255654878,
+      "pred_time_test": 0.19132256507873535
     },
     {
       "model": "RandomForestEntr",
-      "score_test": 0.8747839748625295,
-      "pred_time_test": 0.14640355110168457
+      "score_test": 0.862047188021214,
+      "pred_time_test": 0.19901061058044434
     },
     {
-      "model": "LightGBM",
-      "score_test": 0.7463883589570942,
-      "pred_time_test": 0.07901811599731445
-    },
-    {
-      "model": "LightGBMLarge",
-      "score_test": 0.7236468035761043,
-      "pred_time_test": 0.0656728744506836
-    },
-    {
-      "model": "XGBoost",
-      "score_test": 0.7130662477088243,
-      "pred_time_test": 0.05965995788574219
+      "model": "ExtraTreesEntr",
+      "score_test": 0.859573471261783,
+      "pred_time_test": 0.18162894248962402
     },
     {
       "model": "WeightedEnsemble_L2",
-      "score_test": 0.6941345902068605,
-      "pred_time_test": 0.5570528507232666
+      "score_test": 0.7056389497947939,
+      "pred_time_test": 0.37212491035461426
     },
     {
       "model": "CatBoost",
-      "score_test": 0.6910036284741705,
-      "pred_time_test": 0.038684844970703125
+      "score_test": 0.691505031764772,
+      "pred_time_test": 0.02224898338317871
+    },
+    {
+      "model": "LightGBM",
+      "score_test": 0.6818762766814715,
+      "pred_time_test": 0.0519404411315918
     },
     {
       "model": "LightGBMXT",
-      "score_test": 0.6713986458684024,
-      "pred_time_test": 0.5157589912414551
+      "score_test": 0.6706958265399823,
+      "pred_time_test": 0.19074082374572754
+    },
+    {
+      "model": "LightGBMLarge",
+      "score_test": 0.6539888682745826,
+      "pred_time_test": 0.08411359786987305
+    },
+    {
+      "model": "XGBoost",
+      "score_test": 0.6524990161353798,
+      "pred_time_test": 0.06977057456970215
     }
   ]
 }
