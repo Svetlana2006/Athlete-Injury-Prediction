@@ -89,6 +89,13 @@ def train_and_evaluate_classical(
     df["date"] = pd.to_datetime(df["date"])
     df = df.sort_values(["athlete_id", "date"]).reset_index(drop=True)
 
+    # Drop blackout rows (injury_next_7d is NaN — injury day + 2d post-injury).
+    n_before = len(df)
+    df = df.dropna(subset=[TARGET_COL]).reset_index(drop=True)
+    n_dropped = n_before - len(df)
+    if n_dropped > 0:
+        print(f"Dropped {n_dropped} blackout rows (injury day + 2d post-injury).")
+
     available_features = [f for f in FEATURE_COLUMNS if f in df.columns]
 
     if split_date:

@@ -99,6 +99,13 @@ def train_and_benchmark_all(
     df["date"] = pd.to_datetime(df["date"])
     df = df.sort_values(["athlete_id", "date"]).reset_index(drop=True)
 
+    # Drop blackout rows (injury_next_7d is NaN — injury day + 2d post-injury).
+    n_before = len(df)
+    df = df.dropna(subset=[TARGET_COL]).reset_index(drop=True)
+    n_dropped = n_before - len(df)
+    if n_dropped > 0:
+        print(f"Dropped {n_dropped} blackout rows (injury day + 2d post-injury).")
+
     available_features = [f for f in FEATURE_COLUMNS if f in df.columns]
 
     if split_date:
@@ -115,9 +122,15 @@ def train_and_benchmark_all(
     train_df = df[train_mask].copy()
     test_df = df[~train_mask].copy()
 
-    X_train = train_df[available_features].values
+    # Domain fix: uninjured athletes receive 730 days (2 years baseline)
+    if "days_since_last_injury" in train_df.columns:
+        train_df["days_since_last_injury"] = train_df["days_since_last_injury"].fillna(730.0)
+        test_df["days_since_last_injury"] = test_df["days_since_last_injury"].fillna(730.0)
+
+    imputer = SimpleImputer(strategy="median")
+    X_train = imputer.fit_transform(train_df[available_features])
     y_train = train_df[TARGET_COL].values
-    X_test = test_df[available_features].values
+    X_test = imputer.transform(test_df[available_features])
     y_test = test_df[TARGET_COL].values
 
     baseline_rate = float(y_test.mean())
