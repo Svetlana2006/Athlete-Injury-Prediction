@@ -184,7 +184,9 @@ def train_and_benchmark_all(
 
     # 5. LightGBM (if available)
     try:
-        from lightgbm import LGBMClassifier
+        import importlib
+        _lgb = importlib.import_module("lightgbm")
+        LGBMClassifier = getattr(_lgb, "LGBMClassifier")
         candidate_models["LightGBM (Tuned Scale-Weight)"] = (
             LGBMClassifier(
                 n_estimators=150,
@@ -197,12 +199,14 @@ def train_and_benchmark_all(
             X_train,
             X_test,
         )
-    except ImportError:
+    except (ImportError, ModuleNotFoundError):
         pass
 
     # 6. XGBoost (if available)
     try:
-        from xgboost import XGBClassifier
+        import importlib
+        _xgb = importlib.import_module("xgboost")
+        XGBClassifier = getattr(_xgb, "XGBClassifier")
         candidate_models["XGBoost (Tuned Scale-Weight)"] = (
             XGBClassifier(
                 n_estimators=150,
@@ -215,12 +219,14 @@ def train_and_benchmark_all(
             X_train,
             X_test,
         )
-    except ImportError:
+    except (ImportError, ModuleNotFoundError):
         pass
 
     # 7. CatBoost (if available)
     try:
-        from catboost import CatBoostClassifier
+        import importlib
+        _cat = importlib.import_module("catboost")
+        CatBoostClassifier = getattr(_cat, "CatBoostClassifier")
         candidate_models["CatBoost (Auto Class Weights)"] = (
             CatBoostClassifier(
                 iterations=200,
@@ -233,7 +239,7 @@ def train_and_benchmark_all(
             X_train,
             X_test,
         )
-    except ImportError:
+    except (ImportError, ModuleNotFoundError):
         pass
 
     print("\n" + "=" * 68)
@@ -317,4 +323,13 @@ def train_and_benchmark_all(
 
 
 if __name__ == "__main__":
-    train_and_benchmark_all()
+    import argparse
+    parser = argparse.ArgumentParser(description="Train all gradient boosted and classical models.")
+    parser.add_argument("--split-date", type=str, default=None, help="Explicit cutoff date YYYY-MM-DD (e.g. 2021-01-01)")
+    parser.add_argument("--split-ratio", type=float, default=0.80, help="Train/test temporal split ratio")
+    args = parser.parse_args()
+
+    train_and_benchmark_all(
+        split_date=args.split_date,
+        split_ratio=args.split_ratio,
+    )

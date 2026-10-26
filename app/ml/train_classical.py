@@ -257,4 +257,13 @@ def train_and_evaluate_classical(
 
 
 if __name__ == "__main__":
-    train_and_evaluate_classical()
+    import argparse
+    parser = argparse.ArgumentParser(description="Train classical ML injury models.")
+    parser.add_argument("--split-date", type=str, default=None, help="Explicit cutoff date YYYY-MM-DD (e.g. 2021-01-01)")
+    parser.add_argument("--split-ratio", type=float, default=0.80, help="Train/test temporal split ratio")
+    args = parser.parse_args()
+
+    train_and_evaluate_classical(
+        split_date=args.split_date,
+        split_ratio=args.split_ratio,
+    )
