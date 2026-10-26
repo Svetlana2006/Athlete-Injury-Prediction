@@ -1,65 +1,65 @@
 {
-  "timestamp": "2026-10-21T17:19:44.310924",
+  "timestamp": "2026-10-26T07:00:25.019133",
   "winning_model": "WeightedEnsemble_L2_FULL",
   "metrics": {
-    "pr_auc": 0.02893156922247028,
-    "roc_auc": 0.8471320556930757,
-    "brier_score": 0.0034658773151574015,
-    "top10_recall": 0.45901639344262296,
-    "top10_precision": 0.014721345951629864,
-    "top10_f1": 0.028527763627101375
+    "pr_auc": 0.02740201886801026,
+    "roc_auc": 0.8507681236885851,
+    "brier_score": 0.003482588847403288,
+    "top10_recall": 0.47540983606557374,
+    "top10_precision": 0.015247108307045216,
+    "top10_f1": 0.029546612328069283
   },
   "baseline_injury_rate": 0.0032079936891927425,
   "leaderboard": [
     {
-      "model": "ExtraTreesGini_BAG_L1",
-      "score_test": 0.8973161078504127,
-      "pred_time_test": 0.28373122215270996
-    },
-    {
       "model": "ExtraTreesGini_BAG_L1_FULL",
       "score_test": 0.8973161078504127,
-      "pred_time_test": 0.29584407806396484
+      "pred_time_test": 0.2857832908630371
+    },
+    {
+      "model": "ExtraTreesGini_BAG_L1",
+      "score_test": 0.8973161078504127,
+      "pred_time_test": 0.31714749336242676
     },
     {
       "model": "RandomForestEntr_BAG_L1",
       "score_test": 0.8816842156247136,
-      "pred_time_test": 0.21738004684448242
+      "pred_time_test": 0.21560072898864746
     },
     {
       "model": "RandomForestEntr_BAG_L1_FULL",
       "score_test": 0.8816842156247136,
-      "pred_time_test": 0.22748303413391113
+      "pred_time_test": 0.23302435874938965
     },
     {
       "model": "ExtraTreesEntr_BAG_L1",
       "score_test": 0.8695383300726349,
-      "pred_time_test": 0.26156091690063477
+      "pred_time_test": 0.27430057525634766
     },
     {
       "model": "ExtraTreesEntr_BAG_L1_FULL",
       "score_test": 0.8695383300726349,
-      "pred_time_test": 0.26758813858032227
-    },
-    {
-      "model": "RandomForestGini_BAG_L1_FULL",
-      "score_test": 0.8666382977251222,
-      "pred_time_test": 0.26134252548217773
+      "pred_time_test": 0.3010294437408447
     },
     {
       "model": "RandomForestGini_BAG_L1",
       "score_test": 0.8666382977251222,
-      "pred_time_test": 0.26656508445739746
+      "pred_time_test": 0.2785146236419678
+    },
+    {
+      "model": "RandomForestGini_BAG_L1_FULL",
+      "score_test": 0.8666382977251222,
+      "pred_time_test": 0.28412747383117676
     },
     {
       "model": "WeightedEnsemble_L2_FULL",
-      "score_test": 0.8471320556930757,
-      "pred_time_test": 0.659074068069458
+      "score_test": 0.8507681236885851,
+      "pred_time_test": 0.763885498046875
     },
     {
-      "model": "XGBoost_BAG_L1_FULL",
-      "score_test": 0.7445195183507266,
-      "pred_time_test": 0.18616986274719238
+      "model": "LightGBMLarge_BAG_L1_FULL",
+      "score_test": 0.8154154925557475,
+      "pred_time_test": 0.10727214813232422
     }
   ]
 }
