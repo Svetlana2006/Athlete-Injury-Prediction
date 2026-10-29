@@ -2,20 +2,17 @@
 AutoGluon Tabular AutoML Pipeline for Athlete Injury Prediction
 ==============================================================
 Trains and benchmarks ALL major machine learning and deep learning algorithms
-in a single unified pass using AWS AutoGluon:
-- LightGBM & LightGBM-XT
-- CatBoost
-- XGBoost
-- Random Forest (Gini & Entropy)
-- Extra Trees (Gini & Entropy)
-- NeuralNetTorch (Tabular PyTorch MLP)
-- NeuralNetFastAI (FastAI Deep Learning)
-- WeightedEnsemble (Ensemble stacking the best trees + neural nets)
+in a single unified pass using AWS AutoGluon.
+
+Supports two feature modes:
+  --mode engineered  : 43-column Tier-2 feature set (default, best known result)
+  --mode raw         : 22-column raw sensor readings only (no derived formulas)
 
 Usage:
     pip install autogluon
-    python app/ml/train_autogluon.py
-    python app/ml/train_autogluon.py --time-limit 600 --presets best_quality
+    python app/ml/train_autogluon.py --split-date 2021-01-01
+    python app/ml/train_autogluon.py --split-date 2021-01-01 --mode raw
+    python app/ml/train_autogluon.py --time-limit 600 --presets best_quality --mode raw
 """
 
 import argparse
@@ -47,6 +44,7 @@ from sklearn.metrics import (
 )
 
 from app.ml.dataset import FEATURE_COLUMNS, TARGET_COL
+from app.ml.nn_benchmark import RAW_FEATURE_COLUMNS
 
 
 def compute_metrics(y_true: np.ndarray, probs: np.ndarray) -> dict[str, float]:
@@ -79,6 +77,7 @@ def train_autogluon(
     time_limit: int = 300,
     presets: str = "medium_quality",
     eval_metric: str = "roc_auc",
+    mode: str = "engineered",
 ) -> None:
     try:
         import importlib
@@ -102,6 +101,7 @@ def train_autogluon(
     print("=" * 66)
     print("   ATHLETE INJURY PREDICTION: AUTOGLUON AUTOML PIPELINE")
     print("=" * 66)
+    print(f"Feature Mode         : {mode.upper()}")
     print(f"AutoML Presets       : {presets}")
     print(f"Target Metric        : {eval_metric}")
     print(f"Time Budget          : {time_limit} seconds ({time_limit/60:.1f} minutes)")
@@ -111,14 +111,18 @@ def train_autogluon(
     df = df.sort_values(["athlete_id", "date"]).reset_index(drop=True)
 
     # Drop blackout rows (injury_next_7d is NaN — injury day + 2d post-injury).
-    # These rows carry contaminated forward-filled features and must be excluded.
     n_before = len(df)
     df = df.dropna(subset=[TARGET_COL]).reset_index(drop=True)
     n_dropped = n_before - len(df)
     if n_dropped > 0:
         print(f"Dropped {n_dropped} blackout rows (injury day + 2d post-injury).")
 
-    available_features = [f for f in FEATURE_COLUMNS if f in df.columns]
+    # Select feature set based on mode
+    if mode == "raw":
+        candidate_cols = RAW_FEATURE_COLUMNS
+    else:
+        candidate_cols = FEATURE_COLUMNS
+    available_features = [f for f in candidate_cols if f in df.columns]
 
     if split_date:
         cutoff = pd.to_datetime(split_date)
@@ -188,16 +192,18 @@ def train_autogluon(
     except Exception as e:
         print(f"Could not compute feature importance: {e}")
 
-    # Save summary artifact
+    # Save summary artifact — separate file per mode so both results are preserved
     ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
     results = {
         "timestamp": datetime.now().isoformat(),
+        "feature_mode": mode,
         "winning_model": best_model_name,
         "metrics": best_metrics,
         "baseline_injury_rate": baseline_rate,
         "leaderboard": leaderboard[["model", "score_test", "pred_time_test"]].head(10).to_dict(orient="records"),
     }
-    out_path = ARTIFACTS_DIR / "autogluon_results.json"
+    filename = f"autogluon_results_{mode}.json"
+    out_path = ARTIFACTS_DIR / filename
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
 
@@ -222,8 +228,10 @@ def main() -> None:
     parser.add_argument("--time-limit", type=int, default=300, help="Training time limit in seconds (default: 300)")
     parser.add_argument("--presets", type=str, default="medium_quality", choices=["medium_quality", "high_quality", "best_quality"], help="AutoGluon preset")
     parser.add_argument("--eval-metric", type=str, default="roc_auc", help="Evaluation metric (default: roc_auc)")
-    parser.add_argument("--split-date", type=str, default=None, help="Explicit train/test cutoff date YYYY-MM-DD (recommended: 2021-01-01 for season split)")
-    parser.add_argument("--split-ratio", type=float, default=0.80, help="Train/test temporal split ratio if no --split-date given (default: 0.80)")
+    parser.add_argument("--split-date", type=str, default=None, help="Explicit train/test cutoff date YYYY-MM-DD")
+    parser.add_argument("--split-ratio", type=float, default=0.80, help="Train/test temporal split ratio if no --split-date given")
+    parser.add_argument("--mode", type=str, default="engineered", choices=["raw", "engineered"],
+                        help="Feature set: 'raw' (22 sensor columns) or 'engineered' (43 Tier-2 columns, default)")
     args = parser.parse_args()
 
     train_autogluon(
@@ -232,6 +240,7 @@ def main() -> None:
         eval_metric=args.eval_metric,
         split_date=args.split_date,
         split_ratio=args.split_ratio,
+        mode=args.mode,
     )
 
 
