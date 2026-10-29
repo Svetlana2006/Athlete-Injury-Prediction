@@ -1,0 +1,66 @@
+{
+  "timestamp": "2026-10-29T14:54:41.535031",
+  "feature_mode": "engineered",
+  "winning_model": "WeightedEnsemble_L2",
+  "metrics": {
+    "pr_auc": 0.01929351662908721,
+    "roc_auc": 0.7291371517236727,
+    "brier_score": 0.0037748256638939926,
+    "top10_recall": 0.22950819672131148,
+    "top10_precision": 0.007135575942915392,
+    "top10_f1": 0.01384083044982699
+  },
+  "baseline_injury_rate": 0.0032079936891927425,
+  "leaderboard": [
+    {
+      "model": "ExtraTreesEntr",
+      "score_test": 0.8952381693729599,
+      "pred_time_test": 0.29399847984313965
+    },
+    {
+      "model": "ExtraTreesGini",
+      "score_test": 0.8800382980710849,
+      "pred_time_test": 0.2727699279785156
+    },
+    {
+      "model": "RandomForestEntr",
+      "score_test": 0.8582543241013186,
+      "pred_time_test": 0.22795701026916504
+    },
+    {
+      "model": "RandomForestGini",
+      "score_test": 0.8452638571035656,
+      "pred_time_test": 0.2565345764160156
+    },
+    {
+      "model": "LightGBMLarge",
+      "score_test": 0.8225743257619396,
+      "pred_time_test": 0.09304547309875488
+    },
+    {
+      "model": "LightGBMXT",
+      "score_test": 0.7533026464416871,
+      "pred_time_test": 0.275951623916626
+    },
+    {
+      "model": "XGBoost",
+      "score_test": 0.7381166136478826,
+      "pred_time_test": 0.18562650680541992
+    },
+    {
+      "model": "LightGBM",
+      "score_test": 0.7330655582021702,
+      "pred_time_test": 0.17174077033996582
+    },
+    {
+      "model": "WeightedEnsemble_L2",
+      "score_test": 0.7291371517236727,
+      "pred_time_test": 0.36049795150756836
+    },
+    {
+      "model": "NeuralNetFastAI",
+      "score_test": 0.725298695547633,
+      "pred_time_test": 0.21514439582824707
+    }
+  ]
+}
