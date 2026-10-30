@@ -1,0 +1,29 @@
+{
+  "run_id": "20261030_132933_Transformer",
+  "model": "Transformer",
+  "best_epoch": 1,
+  "total_epochs": 11,
+  "n_params": 72642,
+  "metrics": {
+    "roc_auc": 0.8228556364313419,
+    "pr_auc": 0.013915961379817293,
+    "brier": 0.09222773834560705,
+    "top_k_recall": 0.36065573770491804
+  },
+  "config": {
+    "split_date": "2021-01-01",
+    "seq_len": 14,
+    "hidden_dim": 64,
+    "epochs": 50,
+    "batch_size": 128,
+    "lr": 0.001,
+    "lr_min": 1e-05,
+    "weight_decay": 0.0001,
+    "max_grad_norm": 1.0,
+    "patience": 10,
+    "top_k_pct": 0.1,
+    "seed": 42
+  },
+  "run_dir": "/content/Athlete-Injury-Prediction/artifacts/runs/20261030_132933_Transformer",
+  "best_model_path": "/content/Athlete-Injury-Prediction/artifacts/runs/20261030_132933_Transformer/best_model.pt"
+}
