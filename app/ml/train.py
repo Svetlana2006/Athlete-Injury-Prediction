@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import math
 import random
 import sys
 import time
@@ -256,28 +257,38 @@ def train(cfg: argparse.Namespace) -> dict[str, Any]:
     model = TransformerEncoderModel(
         input_dim=input_dim,
         hidden_dim=cfg.hidden_dim,
+        dropout=cfg.dropout,
     ).to(device)
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     logger.info(f"\n  Model params : {n_params:,}")
 
-    # Loss - standard BCE with logits (positive class weighted)
+    # Loss - standard BCE with logits (pos_weight capped to avoid gradient explosion)
     y_train = data["y_train"]
     n_pos = int(y_train.sum())
     n_neg = len(y_train) - n_pos
-    pos_weight = torch.tensor([n_neg / max(n_pos, 1)], device=device)
+    if cfg.pos_weight > 0:
+        pw_val = cfg.pos_weight
+    else:
+        pw_val = n_neg / max(n_pos, 1)
+    pos_weight = torch.tensor([pw_val], device=device)
     criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
-    logger.info(f"  Loss         : BCEWithLogitsLoss(pos_weight={pos_weight.item():.1f}x)")
+    logger.info(f"  Loss         : BCEWithLogitsLoss(pos_weight={pw_val:.1f}x)")
 
     # Optimizer
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=cfg.lr, weight_decay=cfg.weight_decay
     )
 
-    # LR schedule
-    T_0 = max(1, cfg.epochs // 2)
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
-        optimizer, T_0=T_0, eta_min=cfg.lr_min
-    )
+    # LR schedule: Linear Warmup -> Cosine Annealing Decay
+    def lr_lambda(current_epoch: int) -> float:
+        if current_epoch < cfg.warmup_epochs:
+            return float(current_epoch + 1) / float(max(1, cfg.warmup_epochs))
+        progress = float(current_epoch - cfg.warmup_epochs) / float(max(1, cfg.epochs - cfg.warmup_epochs))
+        cosine_decay = 0.5 * (1.0 + math.cos(math.pi * progress))
+        min_ratio = cfg.lr_min / max(cfg.lr, 1e-8)
+        return min_ratio + (1.0 - min_ratio) * cosine_decay
+
+    scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_lambda)
 
     # Training loop
     best_roc_auc = -1.0
@@ -297,7 +308,7 @@ def train(cfg: argparse.Namespace) -> dict[str, Any]:
     for epoch in range(1, cfg.epochs + 1):
         stats = train_one_epoch(model, train_loader, optimizer, criterion,
                                 device, cfg.max_grad_norm)
-        scheduler.step(epoch - 1)
+        scheduler.step()
 
         metrics = evaluate(model, val_loader, device, cfg.top_k_pct)
         lr_now = optimizer.param_groups[0]["lr"]
@@ -390,16 +401,22 @@ def parse_args() -> argparse.Namespace:
                         help="Lookback window in days")
     parser.add_argument("--hidden-dim", type=int, default=64,
                         help="Transformer hidden dimension")
+    parser.add_argument("--dropout", type=float, default=0.25,
+                        help="Dropout probability")
     parser.add_argument("--epochs", type=int, default=50,
                         help="Max training epochs")
     parser.add_argument("--batch-size", type=int, default=128,
                         help="Batch size")
-    parser.add_argument("--lr", type=float, default=1e-3,
+    parser.add_argument("--lr", type=float, default=5e-5,
                         help="Peak learning rate (AdamW)")
-    parser.add_argument("--lr-min", type=float, default=1e-5,
+    parser.add_argument("--lr-min", type=float, default=1e-6,
                         help="Min LR for cosine annealing")
-    parser.add_argument("--weight-decay", type=float, default=1e-4,
+    parser.add_argument("--warmup-epochs", type=int, default=2,
+                        help="Linear warmup epochs before cosine decay")
+    parser.add_argument("--weight-decay", type=float, default=0.01,
                         help="AdamW weight decay")
+    parser.add_argument("--pos-weight", type=float, default=5.0,
+                        help="Positive class weight in BCE (<=0 uses auto n_neg/n_pos)")
     parser.add_argument("--max-grad-norm", type=float, default=1.0,
                         help="Gradient clipping norm")
     parser.add_argument("--patience", type=int, default=10,

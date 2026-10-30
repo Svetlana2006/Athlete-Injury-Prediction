@@ -1,0 +1,32 @@
+{
+  "run_id": "20261030_192433_Transformer",
+  "model": "Transformer",
+  "best_epoch": 3,
+  "total_epochs": 3,
+  "n_params": 72642,
+  "metrics": {
+    "roc_auc": 0.8911978993563385,
+    "pr_auc": 0.019078685595599467,
+    "brier": 0.014992733410918021,
+    "top_k_recall": 0.6885245901639344
+  },
+  "config": {
+    "split_date": "2021-01-01",
+    "seq_len": 14,
+    "hidden_dim": 64,
+    "dropout": 0.25,
+    "epochs": 3,
+    "batch_size": 128,
+    "lr": 5e-05,
+    "lr_min": 1e-06,
+    "warmup_epochs": 2,
+    "weight_decay": 0.01,
+    "pos_weight": 5.0,
+    "max_grad_norm": 1.0,
+    "patience": 10,
+    "top_k_pct": 0.1,
+    "seed": 42
+  },
+  "run_dir": "C:\\Users\\Svetlana\\Athlete-Injury-Prediction\\artifacts\\runs\\20261030_192433_Transformer",
+  "best_model_path": "C:\\Users\\Svetlana\\Athlete-Injury-Prediction\\artifacts\\runs\\20261030_192433_Transformer\\best_model.pt"
+}
