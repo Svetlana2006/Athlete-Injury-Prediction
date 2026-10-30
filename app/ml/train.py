@@ -151,6 +151,41 @@ def load_data(split_date: str, seq_len: int, batch_size: int, seed: int) -> dict
 
 
 # ---------------------------------------------------------------------------
+# Loss functions
+# ---------------------------------------------------------------------------
+
+class FocalLoss(nn.Module):
+    """
+    Binary Focal Loss for severe class imbalance.
+
+    FL(p_t) = -alpha_t * (1 - p_t)^gamma * log(p_t)
+
+    alpha : weight applied to the positive (injury) class.
+            Set <= 0 to use the same auto pos_weight from cfg.
+    gamma : focusing exponent - higher values down-weight easy negatives more.
+            gamma=2 is the standard value from the RetinaNet paper.
+    """
+
+    def __init__(self, alpha: float = 0.25, gamma: float = 2.0):
+        super().__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+
+    def forward(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        bce = nn.functional.binary_cross_entropy_with_logits(
+            logits, targets, reduction="none"
+        )
+        probs = torch.sigmoid(logits)
+        # p_t is the probability of the correct class
+        p_t = torch.where(targets == 1, probs, 1.0 - probs)
+        # alpha_t: alpha for positives, (1-alpha) for negatives
+        alpha_t = torch.where(targets == 1,
+                              torch.full_like(p_t, self.alpha),
+                              torch.full_like(p_t, 1.0 - self.alpha))
+        return (alpha_t * (1.0 - p_t) ** self.gamma * bce).mean()
+
+
+# ---------------------------------------------------------------------------
 # Evaluation
 # ---------------------------------------------------------------------------
 
@@ -262,7 +297,7 @@ def train(cfg: argparse.Namespace) -> dict[str, Any]:
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     logger.info(f"\n  Model params : {n_params:,}")
 
-    # Loss - standard BCE with logits (pos_weight capped to avoid gradient explosion)
+    # Loss function
     y_train = data["y_train"]
     n_pos = int(y_train.sum())
     n_neg = len(y_train) - n_pos
@@ -270,9 +305,16 @@ def train(cfg: argparse.Namespace) -> dict[str, Any]:
         pw_val = cfg.pos_weight
     else:
         pw_val = n_neg / max(n_pos, 1)
-    pos_weight = torch.tensor([pw_val], device=device)
-    criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
-    logger.info(f"  Loss         : BCEWithLogitsLoss(pos_weight={pw_val:.1f}x)")
+
+    if cfg.loss == "focal":
+        criterion = FocalLoss(alpha=cfg.focal_alpha, gamma=cfg.focal_gamma)
+        logger.info(
+            f"  Loss         : FocalLoss(alpha={cfg.focal_alpha}, gamma={cfg.focal_gamma})"
+        )
+    else:
+        pos_weight = torch.tensor([pw_val], device=device)
+        criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+        logger.info(f"  Loss         : BCEWithLogitsLoss(pos_weight={pw_val:.1f}x)")
 
     # Optimizer
     optimizer = torch.optim.AdamW(
@@ -413,6 +455,12 @@ def parse_args() -> argparse.Namespace:
                         help="Min LR for cosine annealing")
     parser.add_argument("--warmup-epochs", type=int, default=2,
                         help="Linear warmup epochs before cosine decay")
+    parser.add_argument("--loss", choices=["bce", "focal"], default="focal",
+                        help="Loss function: bce (BCEWithLogitsLoss) or focal (FocalLoss)")
+    parser.add_argument("--focal-alpha", type=float, default=0.25,
+                        help="Focal loss alpha (positive class weight, 0-1)")
+    parser.add_argument("--focal-gamma", type=float, default=2.0,
+                        help="Focal loss gamma focusing exponent")
     parser.add_argument("--weight-decay", type=float, default=0.01,
                         help="AdamW weight decay")
     parser.add_argument("--pos-weight", type=float, default=5.0,
