@@ -1,0 +1,9 @@
+15:11:21  ============================================================
+15:11:21    ATHLETE INJURY PREDICTION - TRANSFORMER TRAINER
+15:11:21  ============================================================
+15:11:21    Device  : cpu
+15:11:21    Epochs  : 50  (patience=10)
+15:11:21    LR      : 5e-05  (min=1e-06)
+15:11:21    Run dir : C:\Users\Svetlana\Athlete-Injury-Prediction\artifacts\runs\20261104_151121_Transformer
+15:11:21  
+  Loading data ...

@@ -1,0 +1,16 @@
+15:11:43  ============================================================
+15:11:43    ATHLETE INJURY PREDICTION - TRANSFORMER TRAINER
+15:11:43  ============================================================
+15:11:43    Device  : cpu
+15:11:43    Epochs  : 50  (patience=10)
+15:11:43    LR      : 5e-05  (min=1e-06)
+15:11:43    Run dir : C:\Users\Svetlana\Athlete-Injury-Prediction\artifacts\runs\20261104_151143_Transformer
+15:11:43  
+  Loading data ...
+15:11:44  
+  Model params : 72,642
+15:11:44    Loss         : FocalLoss(alpha=0.25, gamma=2.0)
+15:11:52  
+  ----------------------------------------------------------------------
+15:11:52    Epoch |     Loss |  ROC-AUC |  PR-AUC |    Brier |  Top10R |       LR |    s
+15:11:52    ----------------------------------------------------------------------

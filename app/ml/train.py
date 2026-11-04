@@ -38,7 +38,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 from sklearn.impute import SimpleImputer
-from sklearn.metrics import average_precision_score, brier_score_loss, roc_auc_score
+from sklearn.metrics import average_precision_score, brier_score_loss, log_loss, roc_auc_score
 from sklearn.preprocessing import StandardScaler
 from torch.utils.data import DataLoader
 
@@ -191,7 +191,8 @@ class FocalLoss(nn.Module):
 
 @torch.no_grad()
 def evaluate(model: nn.Module, loader: DataLoader, device: torch.device,
-             top_k_pct: float = 0.10) -> dict[str, float]:
+             top_k_pct: float = 0.10, decision_threshold: float = 0.5,
+             ece_bins: int = 10) -> dict[str, float]:
     model.eval()
     logits_list, targets_list = [], []
 
@@ -203,25 +204,136 @@ def evaluate(model: nn.Module, loader: DataLoader, device: torch.device,
 
     logits_arr = torch.cat(logits_list).numpy()
     targets_arr = torch.cat(targets_list).numpy()
-    probs = 1.0 / (1.0 + np.exp(-logits_arr))
+    probs = torch.sigmoid(torch.from_numpy(logits_arr)).numpy()
+    return compute_metrics(
+        targets_arr, probs, top_k_pct, decision_threshold, ece_bins
+    )
 
-    if len(np.unique(targets_arr)) < 2:
-        return {"roc_auc": float("nan"), "pr_auc": float("nan"),
-                "brier": float("nan"), "top_k_recall": float("nan")}
 
-    roc_auc = float(roc_auc_score(targets_arr, probs))
-    pr_auc = float(average_precision_score(targets_arr, probs))
-    brier = float(brier_score_loss(targets_arr, probs))
+def compute_metrics(
+    targets: np.ndarray,
+    probabilities: np.ndarray,
+    top_k_pct: float = 0.10,
+    decision_threshold: float = 0.5,
+    ece_bins: int = 10,
+) -> dict[str, float]:
+    """Compute ranking, threshold, calibration, and top-k metrics."""
+    targets = np.asarray(targets).reshape(-1).astype(int)
+    probabilities = np.asarray(probabilities).reshape(-1).astype(float)
+    if targets.size == 0:
+        raise ValueError("Cannot compute evaluation metrics for an empty dataset.")
+    if targets.size != probabilities.size:
+        raise ValueError("Targets and probabilities must have the same length.")
+    if not np.isin(targets, [0, 1]).all():
+        raise ValueError("Targets must contain only binary labels (0 or 1).")
+    if not np.isfinite(probabilities).all() or (
+        (probabilities < 0) | (probabilities > 1)
+    ).any():
+        raise ValueError("Probabilities must be finite values between 0 and 1.")
+    if not 0 < top_k_pct <= 1:
+        raise ValueError("top_k_pct must be greater than 0 and at most 1.")
+    if not 0 <= decision_threshold <= 1:
+        raise ValueError("decision_threshold must be between 0 and 1.")
+    if ece_bins < 1:
+        raise ValueError("ece_bins must be at least 1.")
 
-    k = max(1, int(len(probs) * top_k_pct))
-    top_k_idx = np.argsort(probs)[-k:]
-    preds_k = np.zeros(len(probs), dtype=int)
-    preds_k[top_k_idx] = 1
-    true_pos = float((preds_k * targets_arr).sum())
-    top_k_recall = true_pos / float(targets_arr.sum()) if targets_arr.sum() > 0 else 0.0
+    has_both_classes = np.unique(targets).size == 2
+    roc_auc = float(roc_auc_score(targets, probabilities)) if has_both_classes else float("nan")
+    pr_auc = (
+        float(average_precision_score(targets, probabilities))
+        if has_both_classes else float("nan")
+    )
+    brier = float(brier_score_loss(targets, probabilities))
+    probability_loss = float(log_loss(targets, probabilities, labels=[0, 1]))
 
-    return {"roc_auc": roc_auc, "pr_auc": pr_auc, "brier": brier,
-            "top_k_recall": top_k_recall}
+    predictions = (probabilities >= decision_threshold).astype(int)
+    tn, fp, fn, tp = (
+        int(((targets == 0) & (predictions == 0)).sum()),
+        int(((targets == 0) & (predictions == 1)).sum()),
+        int(((targets == 1) & (predictions == 0)).sum()),
+        int(((targets == 1) & (predictions == 1)).sum()),
+    )
+    n_positive = tp + fn
+    n_negative = tn + fp
+    precision = tp / (tp + fp) if tp + fp else 0.0
+    recall = tp / n_positive if n_positive else 0.0
+    specificity = tn / n_negative if n_negative else float("nan")
+    npv = tn / (tn + fn) if tn + fn else 0.0
+    f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
+    class_recalls = [recall] if not n_negative else [specificity]
+    if n_positive:
+        class_recalls.append(recall)
+    balanced_accuracy = float(np.mean(class_recalls))
+
+    mcc_denominator = math.sqrt(
+        (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
+    )
+    mcc = (
+        (tp * tn - fp * fn) / mcc_denominator
+        if mcc_denominator else 0.0
+    )
+    observed_agreement = (tp + tn) / targets.size
+    chance_agreement = (
+        ((tp + fp) * (tp + fn) + (tn + fn) * (tn + fp))
+        / targets.size**2
+    )
+    cohen_kappa = (
+        (observed_agreement - chance_agreement) / (1 - chance_agreement)
+        if chance_agreement < 1 else float("nan")
+    )
+
+    bin_indices = np.minimum(
+        (probabilities * ece_bins).astype(int), ece_bins - 1
+    )
+    ece = sum(
+        float((bin_indices == bin_index).mean())
+        * abs(
+            float(probabilities[bin_indices == bin_index].mean())
+            - float(targets[bin_indices == bin_index].mean())
+        )
+        for bin_index in range(ece_bins)
+        if np.any(bin_indices == bin_index)
+    )
+
+    # Keep the existing floor-based top-k selection semantics.
+    k = max(1, min(targets.size, int(targets.size * top_k_pct)))
+    top_k_idx = np.argsort(probabilities)[-k:]
+    top_k_true_positives = int(targets[top_k_idx].sum())
+    prevalence = n_positive / targets.size
+    top_k_precision = top_k_true_positives / k
+
+    return {
+        "roc_auc": roc_auc,
+        "pr_auc": pr_auc,
+        "brier": brier,
+        "log_loss": probability_loss,
+        "ece": ece,
+        "decision_threshold": decision_threshold,
+        "accuracy": (tp + tn) / targets.size,
+        "precision": precision,
+        "recall": recall,
+        "specificity": specificity,
+        "f1": f1,
+        "balanced_accuracy": balanced_accuracy,
+        "mcc": mcc,
+        "cohen_kappa": cohen_kappa,
+        "npv": npv,
+        "fpr": fp / n_negative if n_negative else float("nan"),
+        "fnr": fn / n_positive if n_positive else float("nan"),
+        "tn": float(tn),
+        "fp": float(fp),
+        "fn": float(fn),
+        "tp": float(tp),
+        "support_negative": float(n_negative),
+        "support_positive": float(n_positive),
+        "prevalence": prevalence,
+        "predicted_positive_rate": float(predictions.mean()),
+        "top_k_pct": top_k_pct,
+        "top_k_count": float(k),
+        "top_k_precision": top_k_precision,
+        "top_k_recall": top_k_true_positives / n_positive if n_positive else 0.0,
+        "top_k_lift": top_k_precision / prevalence if prevalence else float("nan"),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -352,7 +464,10 @@ def train(cfg: argparse.Namespace) -> dict[str, Any]:
                                 device, cfg.max_grad_norm)
         scheduler.step()
 
-        metrics = evaluate(model, val_loader, device, cfg.top_k_pct)
+        metrics = evaluate(
+            model, val_loader, device, cfg.top_k_pct,
+            cfg.decision_threshold, cfg.ece_bins,
+        )
         lr_now = optimizer.param_groups[0]["lr"]
 
         improved = metrics["roc_auc"] > best_roc_auc
@@ -381,8 +496,8 @@ def train(cfg: argparse.Namespace) -> dict[str, Any]:
 
         log_rows.append({
             "epoch": epoch, "train_loss": stats["avg_loss"],
-            "val_roc_auc": metrics["roc_auc"], "val_pr_auc": metrics["pr_auc"],
-            "val_brier": metrics["brier"], "val_top10_recall": metrics["top_k_recall"],
+            **{f"val_{name}": value for name, value in metrics.items()},
+            "val_top10_recall": metrics["top_k_recall"],
             "lr": lr_now, "epoch_time_s": stats["duration_s"], "is_best": improved,
         })
 
@@ -397,7 +512,10 @@ def train(cfg: argparse.Namespace) -> dict[str, Any]:
     # Load best checkpoint and do final eval
     ckpt = torch.load(best_model_path, map_location=device, weights_only=True)
     model.load_state_dict(ckpt["model_state_dict"])
-    final = evaluate(model, val_loader, device, cfg.top_k_pct)
+    final = evaluate(
+        model, val_loader, device, cfg.top_k_pct,
+        cfg.decision_threshold, cfg.ece_bins,
+    )
 
     logger.info("\n" + "=" * 60)
     logger.info("  FINAL RESULTS (best checkpoint)")
@@ -405,8 +523,28 @@ def train(cfg: argparse.Namespace) -> dict[str, Any]:
     logger.info(f"  Best epoch  : {best_epoch} / {epoch}")
     logger.info(f"  ROC-AUC     : {final['roc_auc']:.4f}")
     logger.info(f"  PR-AUC      : {final['pr_auc']:.4f}")
+    logger.info(
+        f"  Threshold   : {final['decision_threshold']:.2f} | "
+        f"Accuracy: {final['accuracy']:.4f} | Precision: {final['precision']:.4f} | "
+        f"Recall: {final['recall']:.4f} | Specificity: {final['specificity']:.4f} | "
+        f"F1: {final['f1']:.4f}"
+    )
+    logger.info(
+        f"  MCC         : {final['mcc']:.4f} | Balanced accuracy: "
+        f"{final['balanced_accuracy']:.4f} | Cohen's kappa: {final['cohen_kappa']:.4f}"
+    )
     logger.info(f"  Brier       : {final['brier']:.5f}")
-    logger.info(f"  Top-10% Recall : {final['top_k_recall']*100:.1f}%")
+    logger.info(
+        f"  Log loss    : {final['log_loss']:.5f} | ECE: {final['ece']:.5f}"
+    )
+    logger.info(
+        f"  Confusion   : TN={final['tn']:.0f} FP={final['fp']:.0f} "
+        f"FN={final['fn']:.0f} TP={final['tp']:.0f}"
+    )
+    logger.info(
+        f"  Top-{cfg.top_k_pct:.0%} risk : Precision={final['top_k_precision']:.4f} | "
+        f"Recall={final['top_k_recall']:.4f} | Lift={final['top_k_lift']:.4f}"
+    )
     logger.info("=" * 60)
 
     results: dict[str, Any] = {
@@ -471,6 +609,10 @@ def parse_args() -> argparse.Namespace:
                         help="Early stopping patience (epochs)")
     parser.add_argument("--top-k-pct", type=float, default=0.10,
                         help="Top-K%% risk threshold for recall")
+    parser.add_argument("--decision-threshold", type=float, default=0.5,
+                        help="Probability threshold for classification metrics")
+    parser.add_argument("--ece-bins", type=int, default=10,
+                        help="Number of equal-width bins for expected calibration error")
     parser.add_argument("--seed", type=int, default=42,
                         help="Random seed")
     return parser.parse_args()
