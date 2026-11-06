@@ -483,6 +483,10 @@ def train(cfg: argparse.Namespace) -> dict[str, Any]:
                 "optimizer_state_dict": optimizer.state_dict(),
                 "metrics": metrics,
                 "cfg": vars(cfg),
+                "feature_cols": data["feature_cols"],
+                "imputer_medians": data["imputer"].statistics_.tolist(),
+                "scaler_mean": data["scaler"].mean_.tolist(),
+                "scaler_scale": data["scaler"].scale_.tolist(),
             }, best_model_path)
         else:
             no_improve += 1

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#bfc6df", "on-surface": "#dde2f4", "on-primary": "#003911", "surface-bright": "#333947", "on-primary-container": "#006223", "on-tertiary-fixed": "#131b2d", "on-tertiary-fixed-variant": "#3f465b", "tertiary-container": "#c1c8e1", "on-secondary-container": "#a9b9db", "primary-container": "#10e760", "primary": "#7fff91", "on-secondary-fixed": "#091b36", "tertiary-fixed": "#dbe2fb", "surface-dim": "#0d131f", "on-secondary": "#20304d", "surface-container-high": "#242a37", "surface-variant": "#2f3542", "secondary-fixed-dim": "#b7c7ea", "surface-tint": "#04e55e", "surface-container": "#1a202c", "surface": "#0d131f", "surface-container-lowest": "#080e1a", "on-background": "#dde2f4", "primary-fixed": "#6aff85", "inverse-surface": "#dde2f4", "secondary-fixed": "#d7e2ff", "tertiary": "#dde4fe", "secondary-container": "#3a4967", "error-container": "#93000a", "surface-container-low": "#161c28", "primary-fixed-dim": "#04e55e", "surface-container-highest": "#2f3542", "background": "#0d131f", "on-error": "#690005", "on-primary-fixed": "#002107", "on-primary-fixed-variant": "#00531d", "outline": "#859582", "outline-variant": "#3c4b3b", "on-secondary-fixed-variant": "#374764", "inverse-primary": "#006e29", "on-error-container": "#ffdad6", "on-tertiary": "#283043", "on-tertiary-container": "#4c5468", "inverse-on-surface": "#2a303e", "error": "#ffb4ab", "on-surface-variant": "bacbb7", "secondary": "#b7c7ea" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "2.5rem", "gutter": "1.5rem", "margin-mobile": "1rem", "margin": "2.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-md": "1rem", "gutter-mobile": "1rem", "space-sm": "0.5rem" }, "fontFamily": { "kpi-stat": [ "Space Grotesk" ], "headline-xl": [ "Space Grotesk" ], "headline-sm": [ "Space Grotesk" ], "headline-md": [ "Space Grotesk" ], "headline-lg": [ "Space Grotesk" ], "label-sm": [ "JetBrains Mono" ], "body-lg": [ "Geist" ], "label-md": [ "JetBrains Mono" ], "body-md": [ "Geist" ], "headline-lg-mobile": [ "Space Grotesk" ], "body-sm": [ "Geist" ], "headline-xl-mobile": [ "Space Grotesk" ] }, "fontSize": { "kpi-stat": [ "36px", { "lineHeight": "44px", "fontWeight": "700" } ], "headline-xl": [ "40px", { "lineHeight": "48px", "fontWeight": "600" } ], "headline-sm": [ "18px", { "lineHeight": "26px", "fontWeight": "500" } ], "headline-md": [ "22px", { "lineHeight": "30px", "fontWeight": "500" } ], "headline-lg": [ "30px", { "lineHeight": "38px", "fontWeight": "600" } ], "label-sm": [ "11px", { "lineHeight": "16px", "fontWeight": "500" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "label-md": [ "13px", { "lineHeight": "18px", "fontWeight": "500" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ], "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "fontWeight": "600" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "headline-xl-mobile": [ "28px", { "lineHeight": "36px", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-low z-50 flex flex-col justify-between py-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col gap-space-lg"><div class="px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 rounded bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-on-primary-container text-[18px]">sports_and_outdoors</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface font-bold">ATHLETE<span class="text-primary">IQ</span></span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">AI Biometrics</span></div></div><div class="px-space-xs py-0.5 rounded bg-surface-container-high text-primary font-label-sm text-label-sm">v2.4</div></div><nav class="flex flex-col gap-1 px-space-md" data-active-classes="bg-secondary-container text-on-surface font-medium"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="overview" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="font-body-md text-body-md">Overview</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="athletes" href="#"><span class="material-symbols-outlined text-[20px]">groups</span><span class="font-body-md text-body-md">Athletes</span></a><a aria-current="page" class="flex items-center justify-between px-space-md py-space-sm rounded-lg transition-colors bg-secondary-container text-on-surface font-medium" data-path="injury-prediction" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[20px]">vital_signs</span><span class="font-body-md text-body-md">Injury Prediction</span></div><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-highest text-primary">ML MODEL</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="performance-analytics" href="#"><span class="material-symbols-outlined text-[20px]">analytics</span><span class="font-body-md text-body-md">Performance Analytics</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="model-insights" href="#"><span class="material-symbols-outlined text-[20px]">model_training</span><span class="font-body-md text-body-md">Model Insights</span></a></nav></div><div class="px-space-md"><div class="p-space-md rounded-xl bg-surface-container flex flex-col gap-space-xs"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">PyTorch Inference</span><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span><span class="font-label-sm text-label-sm text-primary">Online</span></div></div><div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>Latency: 14ms</span><span>Sync: 99.8%</span></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant text-body-sm font-body-sm"><span class="material-symbols-outlined text-[16px] text-primary">memory</span><span>Production Model v2.4 (Transformer + Focal Loss)</span></div></div><div class="flex items-center gap-space-md"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[18px]">search</span><input class="w-64 pl-9 pr-space-md py-1.5 bg-surface-container-low rounded-lg text-body-sm font-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Search athlete, bio-metric ID..." type="text"/></div><button aria-label="Notifications" class="p-2 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span></button><div class="flex items-center gap-space-sm pl-space-sm"><div class="flex flex-col text-right hidden sm:flex"><span class="font-body-sm text-body-sm text-on-surface font-medium leading-none">Dr. Marcus Vance</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none mt-1">Head of Sports Science</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="w-full pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<div class="w-full max-w-[1600px] mx-auto px-margin-mobile md:px-gutter lg:px-margin py-space-lg flex flex-col gap-space-xl">
+<!-- SECTION 1: ATHLETE SELECTION & CONTEXT BAR -->
+<section class="bg-surface-container-low rounded-xl p-space-md lg:p-space-lg flex flex-col xl:flex-row items-start xl:items-center justify-between gap-space-md shadow-sm">
+<div class="flex flex-wrap items-center gap-space-md">
+<div class="relative w-14 h-14 rounded-lg overflow-hidden bg-surface-container-high flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="High contrast portrait of athletic football winger Marcus Sterling in elite dark training jersey, neutral deep charcoal background, subtle rim lighting, professional sports science portfolio style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgnCBGKN730l73_ilK1xB8Rfzm-jmnVpftrmaU6pSigVHmHWGOhpQXTIYR9fzGcS6nQ9IMBYCHZAjvPYii4aVL3MdIXhgY_h4iZqi6bnJjQ11I3dCGIVbTVUiQf-amjSs7e0BAKc7xyo1OCxRHudEGKlx510W1x-scHVXTSSjYN4PRugMplZiF0duL3Xc695MMR3EI6PNOXOf-m8zqWhJGSrZBNR_iM_cG1lmdW-Q"/>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-sm flex-wrap">
+<h1 class="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight">Marcus Sterling</h1>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-secondary font-medium">#ATH-101</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant uppercase tracking-wider">Football Winger · 1st Team</span>
+</div>
+<div class="flex items-center gap-space-md mt-1 text-on-surface-variant flex-wrap">
+<span class="flex items-center gap-1 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>
+<span>Today (Simulated 30-Day Window)</span>
+</span>
+<span class="text-surface-bright hidden sm:inline">•</span>
+<span class="flex items-center gap-1 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-outline">timer</span>
+<span>Last Match: 48h ago (94 min played)</span>
+</span>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm w-full xl:w-auto justify-between xl:justify-end">
+<div class="flex items-center gap-2 px-space-md py-1.5 rounded-lg bg-surface-container text-on-surface font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="text-on-surface">FastAPI PyTorch Service · Transformer Encoder + Focal Loss</span>
+</div>
+<button class="px-space-md py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors flex items-center gap-2" id="load-sample-btn" type="button">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+<span>Load Sample Data</span>
+</button>
+</div>
+</section>
+<!-- SECTION 2: INPUT FEATURE GROUPS (4 COLUMNS) -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest font-semibold">TENSOR INPUT BATCH</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Multivariate Sequence (24 Features × 30 Timesteps)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Validated 09:42:18 UTC</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter">
+<!-- Feature Card 1: Training Load -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col justify-between hover:bg-surface-container transition-colors shadow-sm">
+<div>
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">speed</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Training Load</span>
+</div>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-error-container text-error">ACUTE HIGH</span>
+</div>
+<div class="mt-space-md flex flex-col gap-space-sm">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Acute:Chronic Workload Ratio</div>
+<div class="flex items-baseline gap-2 mt-0.5">
+<span class="font-headline-lg text-headline-lg text-error font-bold tracking-tight">1.68</span>
+<span class="font-label-sm text-label-sm text-error font-medium">Safe Zone: &lt;1.30</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-space-xs">
+<div class="bg-surface-container-lowest p-2 rounded">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Session RPE</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">8.5 <span class="text-on-surface-variant font-normal text-body-sm">/ 10</span></span>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Sprint Dist.</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">1,420 m</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Z-Score: +2.4σ</span>
+<span class="text-primary font-medium">Sensor: Catapult GNSS</span>
+</div>
+</div>
+<!-- Feature Card 2: Physiological -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col justify-between hover:bg-surface-container transition-colors shadow-sm">
+<div>
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">cardiology</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Physiological</span>
+</div>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-highest text-secondary">ANS STRAIN</span>
+</div>
+<div class="mt-space-md flex flex-col gap-space-sm">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">HRV rMSSD Baseline Shift</div>
+<div class="flex items-baseline gap-2 mt-0.5">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">42 ms</span>
+<span class="font-label-sm text-label-sm text-error font-medium">-22% Drop</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-space-xs">
+<div class="bg-surface-container-lowest p-2 rounded">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Resting HR</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">58 <span class="text-on-surface-variant font-normal text-body-sm">bpm (+6)</span></span>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Peak HR</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">194 <span class="text-on-surface-variant font-normal text-body-sm">bpm</span></span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Autonomic Depletion</span>
+<span class="text-primary font-medium">Polar H10 ECG</span>
+</div>
+</div>
+<!-- Feature Card 3: Wellness -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col justify-between hover:bg-surface-container transition-colors shadow-sm">
+<div>
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">bedtime</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Subjective Wellness</span>
+</div>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-error-container text-error">DEFICIT</span>
+</div>
+<div class="mt-space-md flex flex-col gap-space-sm">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Hamstring Muscle Soreness</div>
+<div class="flex items-baseline gap-2 mt-0.5">
+<span class="font-headline-lg text-headline-lg text-error font-bold tracking-tight">7.0</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">/ 10 (Elevated)</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-space-xs">
+<div class="bg-surface-container-lowest p-2 rounded">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Subjective Fatigue</span>
+<span class="font-body-lg text-body-lg text-error font-semibold">8.0 <span class="text-on-surface-variant font-normal text-body-sm">/ 10</span></span>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Sleep Duration</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">5.4 <span class="text-on-surface-variant font-normal text-body-sm">hrs</span></span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Cumulative Deficit</span>
+<span class="text-primary font-medium">SmartBase Daily Log</span>
+</div>
+</div>
+<!-- Feature Card 4: Biomechanics -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col justify-between hover:bg-surface-container transition-colors shadow-sm">
+<div>
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">footprint</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Biomechanics</span>
+</div>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-highest text-secondary">ASYMMETRIC</span>
+</div>
+<div class="mt-space-md flex flex-col gap-space-sm">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Bilateral Foot Strike Bias</div>
+<div class="flex items-baseline gap-2 mt-0.5">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">8.4%</span>
+<span class="font-label-sm text-label-sm text-error font-medium">Left Bias (&gt;5.0% Crit)</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-space-xs">
+<div class="bg-surface-container-lowest p-2 rounded">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Impact Load</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">284 <span class="text-on-surface-variant font-normal text-body-sm">G-forces</span></span>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Hard Decels (&gt;3.5m/s²)</span>
+<span class="font-body-lg text-body-lg text-error font-semibold">48 <span class="text-on-surface-variant font-normal text-body-sm">events</span></span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Force De-compensation</span>
+<span class="text-primary font-medium">STATSports 100Hz</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: HERO ACTION BAR -->
+<section class="bg-surface-container-low rounded-xl p-space-md lg:p-space-lg flex flex-col lg:flex-row items-center justify-between gap-space-md shadow-md relative overflow-hidden">
+<div class="flex items-center gap-space-md z-10">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[28px]">batch_prediction</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Neural Risk Assessment Engine</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-high text-primary font-mono">v2.4 Ready</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Executes temporal self-attention across 30-day multivariate sliding window to detect acute micro-trauma signatures.
+          </p>
+</div>
+</div>
+<div class="w-full lg:w-auto flex-shrink-0 z-10">
+<button class="w-full lg:w-auto px-space-xl py-3.5 rounded bg-primary text-on-primary font-headline-sm text-headline-sm font-bold tracking-tight hover:bg-primary-fixed transition-all flex items-center justify-center gap-2 shadow-lg active:scale-98" id="run-prediction-btn" type="button">
+<span class="material-symbols-outlined text-[22px]">bolt</span>
+<span>RUN INJURY RISK PREDICTION</span>
+</button>
+</div>
+</section>
+<!-- SECTION 4: MODEL OUTPUT & RISK JUSTIFICATION (2 COLUMNS) -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch">
+<!-- Left Column: Prediction Results & Clinical Recommendation (7 cols) -->
+<div class="lg:col-span-7 bg-surface-container-low rounded-xl p-space-lg flex flex-col justify-between shadow-sm">
+<div>
+<div class="flex items-center justify-between pb-space-md">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-error animate-ping"></span>
+<span class="font-label-sm text-label-sm text-error uppercase tracking-widest font-semibold">Active Prediction Output</span>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-error-container text-error font-bold">HIGH RISK OVERLOAD</span>
+</div>
+<!-- Gauge + Primary Verdict -->
+<div class="flex flex-col sm:flex-row items-center gap-space-lg my-space-md bg-surface-container-lowest p-space-lg rounded-xl">
+<!-- Circular Gauge Visualization -->
+<div class="relative w-36 h-36 flex items-center justify-center flex-shrink-0">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 120 120">
+<circle class="text-surface-variant opacity-40" cx="60" cy="60" fill="none" r="50" stroke="currentColor" stroke-width="10"></circle>
+<circle class="text-error transition-all duration-1000 ease-out" cx="60" cy="60" fill="none" id="prediction-meter" r="50" stroke="currentColor" stroke-dasharray="314.159" stroke-dashoffset="67.85" stroke-linecap="round" stroke-width="10"></circle>
+</svg>
+<div class="absolute flex flex-col items-center justify-center text-center">
+<span class="font-kpi-stat text-kpi-stat font-bold text-on-surface leading-none" id="risk-score-value">78.4<span class="text-headline-sm font-normal">%</span></span>
+<span class="font-label-sm text-label-sm text-error mt-1 tracking-wider uppercase font-semibold">Risk Index</span>
+</div>
+</div>
+<!-- Risk Text Summary -->
+<div class="flex flex-col min-w-0 text-center sm:text-left">
+<div class="flex items-center justify-center sm:justify-start gap-2">
+<span class="material-symbols-outlined text-error text-[20px]">warning</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">HIGH RISK (Soft-Tissue Overload)</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                Model confidence threshold exceeded (94.6% confidence interval). Acute neuromuscular strain indicates severe vulnerability in the posterior kinetic chain within the next 48-72 hour training window.
+              </p>
+<div class="flex items-center justify-center sm:justify-start gap-space-sm mt-3">
+<div class="px-2 py-1 rounded bg-surface-container font-label-sm text-label-sm text-on-surface">
+<span class="text-on-surface-variant">Class: </span>Grade 1-2 Myofascial Strain
+                </div>
+<div class="px-2 py-1 rounded bg-surface-container font-label-sm text-label-sm text-on-surface">
+<span class="text-on-surface-variant">Target Locus: </span>Biceps Femoris (Left)
+                </div>
+</div>
+</div>
+</div>
+<!-- Actionable Clinical Recommendation Box -->
+<div class="bg-surface-container p-space-md rounded-xl mt-space-md">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-6 h-6 rounded bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined text-[16px]">medical_services</span>
+</div>
+<span class="font-headline-sm text-body-lg font-semibold text-on-surface">Actionable Clinical Recommendation</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface pl-8">
+              Immediate load deloading recommended. Restrict high-speed sprint sessions for 48 hours. Schedule targeted eccentric hamstring screening. Replace high-velocity match simulation with low-impact hydrotherapy recovery and isometric knee-flexion tests.
+            </p>
+</div>
+</div>
+<!-- Meta specs at bottom -->
+<div class="mt-space-lg pt-space-sm bg-surface-container-lowest px-space-md py-2.5 rounded-lg flex flex-wrap items-center justify-between gap-space-sm font-label-sm text-label-sm text-on-surface-variant">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>
+<span>Transformer-v2.4-prod</span>
+</div>
+<div>Inference Latency: <span class="text-on-surface font-semibold">14.2 ms</span></div>
+<div>Softmax Confidence: <span class="text-on-surface font-semibold">94.6%</span></div>
+<div>Attention Layers: <span class="text-on-surface font-semibold">8 Heads (Temporal)</span></div>
+</div>
+</div>
+<!-- Right Column: Model Feature Attribution (5 cols) -->
+<div class="lg:col-span-5 bg-surface-container-low rounded-xl p-space-lg flex flex-col justify-between shadow-sm">
+<div>
+<div class="flex items-center justify-between pb-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">equalizer</span>
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">Model Feature Attribution</span>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono">SHAP Weights</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Relative contribution to current risk probability derived via multi-head self-attention pooling weights:
+          </p>
+<!-- Contribution Horizontal Bars -->
+<div class="flex flex-col gap-space-md mt-space-md">
+<!-- Item 1 -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-medium">1. Acute:Chronic Workload Ratio (&gt;1.5)</span>
+<span class="text-error font-semibold">+28.4%</span>
+</div>
+<div class="w-full h-2 rounded bg-surface-container overflow-hidden">
+<div class="h-full rounded bg-error transition-all duration-700" style="width: 88%;"></div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-medium">2. Hamstring Muscle Soreness (7.0/10)</span>
+<span class="text-error font-semibold">+19.2%</span>
+</div>
+<div class="w-full h-2 rounded bg-surface-container overflow-hidden">
+<div class="h-full rounded bg-error transition-all duration-700" style="width: 65%;"></div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-medium">3. HRV Suppression (-22% from baseline)</span>
+<span class="text-secondary font-semibold">+16.5%</span>
+</div>
+<div class="w-full h-2 rounded bg-surface-container overflow-hidden">
+<div class="h-full rounded bg-secondary transition-all duration-700" style="width: 54%;"></div>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-medium">4. High-Speed Decelerations (&gt;45 counts)</span>
+<span class="text-secondary font-semibold">+14.1%</span>
+</div>
+<div class="w-full h-2 rounded bg-surface-container overflow-hidden">
+<div class="h-full rounded bg-secondary transition-all duration-700" style="width: 48%;"></div>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-medium">5. Sleep Deficit (&lt;6.0 hrs avg)</span>
+<span class="text-on-surface font-semibold">+11.8%</span>
+</div>
+<div class="w-full h-2 rounded bg-surface-container overflow-hidden">
+<div class="h-full rounded bg-on-surface-variant transition-all duration-700" style="width: 38%;"></div>
+</div>
+</div>
+<!-- Item 6 -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-medium">6. Kinematic Ground Reaction Asymmetry</span>
+<span class="text-on-surface font-semibold">+10.0%</span>
+</div>
+<div class="w-full h-2 rounded bg-surface-container overflow-hidden">
+<div class="h-full rounded bg-on-surface-variant transition-all duration-700" style="width: 32%;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md p-space-sm rounded-lg bg-surface-container flex items-start gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary mt-0.5">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Simulated feature influence weights. Ready for SHAP / Attention-weight extraction from production model. Temporal decay weight λ=0.92 applied to historical timesteps.
+          </p>
+</div>
+</div>
+</section>
+<!-- SECTION 5: PREDICTION AUDIT HISTORY (CLEAN MINIMAL TABLE) -->
+<section class="bg-surface-container-low rounded-xl p-space-lg shadow-sm">
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-sm pb-space-md">
+<div>
+<h2 class="font-headline-sm text-headline-sm font-semibold text-on-surface">30-Day Longitudinal Prediction Audit</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Progression trajectory for Marcus Sterling across the past 4 micro-cycles.</p>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Trajectory:</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-error-container text-error font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+            CRITICAL ACCELERATION
+          </span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-space-md rounded-l">Timestamp</th>
+<th class="py-3 px-space-md">Microcycle Phase</th>
+<th class="py-3 px-space-md">ACWR</th>
+<th class="py-3 px-space-md">Hamstring Soreness</th>
+<th class="py-3 px-space-md">HRV Shift</th>
+<th class="py-3 px-space-md">Model Risk Score</th>
+<th class="py-3 px-space-md rounded-r text-right">Intervention State</th>
+</tr>
+</thead>
+<tbody class="divide-y-0">
+<!-- Row 1: Current -->
+<tr class="bg-surface-container-high/40 hover:bg-surface-container transition-colors">
+<td class="py-3.5 px-space-md font-mono font-medium text-on-surface">Today, 09:42 UTC</td>
+<td class="py-3.5 px-space-md text-on-surface">MD-1 (Match Preparation)</td>
+<td class="py-3.5 px-space-md font-mono text-error font-bold">1.68</td>
+<td class="py-3.5 px-space-md text-error">7.0 / 10</td>
+<td class="py-3.5 px-space-md text-error">-22%</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-sm text-label-sm px-2 py-1 rounded bg-error-container text-error font-bold">78.4% · HIGH RISK</span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-label-sm text-label-sm px-2 py-1 rounded bg-error text-on-error font-semibold">Immediate Pull Pending</span>
+</td>
+</tr>
+<!-- Row 2: 7 Days ago -->
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-3.5 px-space-md font-mono text-on-surface-variant">7 Days Ago</td>
+<td class="py-3.5 px-space-md text-on-surface-variant">Post Match Day +2</td>
+<td class="py-3.5 px-space-md font-mono text-secondary">1.44</td>
+<td class="py-3.5 px-space-md text-on-surface-variant">5.5 / 10</td>
+<td class="py-3.5 px-space-md text-secondary">-14%</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-sm text-label-sm px-2 py-1 rounded bg-surface-container-highest text-secondary font-medium">62.1% · ELEVATED</span>
+</td>
+<td class="py-3.5 px-space-md text-right text-on-surface-variant">
+<span>Partial Minutes Warning</span>
+</td>
+</tr>
+<!-- Row 3: 14 Days ago -->
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-3.5 px-space-md font-mono text-on-surface-variant">14 Days Ago</td>
+<td class="py-3.5 px-space-md text-on-surface-variant">Standard Loading Week</td>
+<td class="py-3.5 px-space-md font-mono text-on-surface">1.21</td>
+<td class="py-3.5 px-space-md text-on-surface-variant">3.5 / 10</td>
+<td class="py-3.5 px-space-md text-on-surface-variant">-4%</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-sm text-label-sm px-2 py-1 rounded bg-surface-container-highest text-on-surface font-medium">34.5% · MODERATE</span>
+</td>
+<td class="py-3.5 px-space-md text-right text-on-surface-variant">
+<span>Monitoring Active</span>
+</td>
+</tr>
+<!-- Row 4: 28 Days ago -->
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-3.5 px-space-md font-mono text-on-surface-variant">28 Days Ago</td>
+<td class="py-3.5 px-space-md text-on-surface-variant">Pre-Season Reset</td>
+<td class="py-3.5 px-space-md font-mono text-primary font-medium">1.02</td>
+<td class="py-3.5 px-space-md text-on-surface-variant">1.5 / 10</td>
+<td class="py-3.5 px-space-md text-primary">+3%</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-sm text-label-sm px-2 py-1 rounded bg-surface-container text-primary font-medium">11.0% · LOW RISK</span>
+</td>
+<td class="py-3.5 px-space-md text-right text-on-surface-variant">
+<span>Cleared Full Session</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</div>
+<script>
+  (function() {
+    const runBtn = document.getElementById('run-prediction-btn');
+    const loadSampleBtn = document.getElementById('load-sample-btn');
+    const riskScoreVal = document.getElementById('risk-score-value');
+    const meter = document.getElementById('prediction-meter');
+
+    if (runBtn) {
+      runBtn.addEventListener('click', function() {
+        const originalContent = runBtn.innerHTML;
+        runBtn.disabled = true;
+        runBtn.classList.add('opacity-75', 'cursor-wait');
+        runBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[20px] animate-spin">refresh</span>
+          <span>COMPUTING TEMPORAL TENSORS (14ms)...</span>
+        `;
+
+        if (meter) {
+          meter.style.strokeDashoffset = '314.159';
+        }
+        if (riskScoreVal) {
+          riskScoreVal.innerHTML = '--.-<span class="text-headline-sm font-normal">%</span>';
+        }
+
+        setTimeout(() => {
+          runBtn.disabled = false;
+          runBtn.classList.remove('opacity-75', 'cursor-wait');
+          runBtn.innerHTML = originalContent;
+
+          if (meter) {
+            meter.style.strokeDashoffset = '67.85'; // 78.4% filled
+          }
+          if (riskScoreVal) {
+            riskScoreVal.innerHTML = '78.4<span class="text-headline-sm font-normal">%</span>';
+          }
+        }, 650);
+      });
+    }
+
+    if (loadSampleBtn) {
+      loadSampleBtn.addEventListener('click', function() {
+        loadSampleBtn.classList.add('bg-primary-container', 'text-on-primary-container');
+        setTimeout(() => {
+          loadSampleBtn.classList.remove('bg-primary-container', 'text-on-primary-container');
+        }, 400);
+      });
+    }
+  })();
+</script></main></div></body></html>
