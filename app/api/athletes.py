@@ -58,6 +58,9 @@ def list_athletes() -> list[dict]:
             last = preds[aid][-1]
             prob = last["predicted_probability"]
             cat  = last["risk_category"]
+        elif "predicted_probability" in ath and "risk_category" in ath:
+            prob = ath["predicted_probability"]
+            cat  = ath["risk_category"]
         else:
             prob = scenario_prob.get(ath.get("scenario", "A"), 0.08)
             if prob < 0.15: cat = "Low"

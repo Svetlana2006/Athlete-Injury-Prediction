@@ -67,12 +67,15 @@ def dashboard_summary() -> dict[str, Any]:
     for ath in athletes:
         aid = ath["id"]
         if aid in preds and preds[aid]:
-            latest_prob = preds[aid][-1]["predicted_probability"]
-            cat = _category_from_prob(latest_prob)
+            latest_pred = preds[aid][-1]
+            cat = latest_pred.get("risk_category", "").lower()
+            if cat not in counts:
+                cat = _category_from_prob(latest_pred.get("predicted_probability", 0.1))
+        elif "risk_category" in ath:
+            cat = ath["risk_category"].lower()
         else:
-            # Heuristic from scenario so dashboard is non-trivial at first load
-            scenario_map = {"A": 0.08, "B": 0.42, "C": 0.35, "D": 0.25, "E": 0.12}
-            cat = _category_from_prob(scenario_map.get(ath.get("scenario", "A"), 0.08))
+            scenario_map = {"High": 0.80, "Elevated": 0.50, "Moderate": 0.25, "Low": 0.08}
+            cat = _category_from_prob(scenario_map.get(ath.get("risk_category", "Low"), 0.08))
         counts[cat] += 1
 
     return {
