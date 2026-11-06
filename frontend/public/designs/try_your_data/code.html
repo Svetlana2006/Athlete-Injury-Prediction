@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Try your data | ATHLETEIQ</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1118;
+      --panel: #121b25;
+      --panel-raised: #182431;
+      --border: #263545;
+      --text: #edf4f8;
+      --muted: #9aabba;
+      --green: #67e8a5;
+      --cyan: #77d7ed;
+      --red: #ff9a9a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    a { color: var(--cyan); }
+    main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 56px; }
+    .topline { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .back { text-decoration: none; font-size: 14px; }
+    .badge { color: var(--green); border: 1px solid #285941; background: #10251c; padding: 5px 10px; border-radius: 999px; font-size: 12px; }
+    h1 { margin: 28px 0 8px; font-size: clamp(28px, 4vw, 40px); line-height: 1.15; }
+    .intro { max-width: 760px; margin: 0; color: var(--muted); font-size: 16px; }
+    .notice { margin: 24px 0; padding: 16px 18px; border: 1px solid #31495a; border-radius: 12px; background: #111d28; color: #c6d6e0; }
+    .notice strong { color: var(--text); }
+    .notice.warning { border-color: #80652f; background: #282113; color: #f1ddae; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+    .step { padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); }
+    .step-number { color: var(--green); font-weight: 750; margin-right: 7px; }
+    .step p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+    .panel { margin-top: 20px; padding: 22px; border: 1px solid var(--border); border-radius: 16px; background: var(--panel); }
+    .panel-heading { margin: 0; font-size: 20px; }
+    .panel-copy { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+    .controls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin-top: 18px; }
+    .scenario-bar { margin-top: 20px; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #0e1720; }
+    .scenario-heading { margin: 0; font-size: 15px; }
+    .scenario-copy { margin: 3px 0 12px; color: var(--muted); font-size: 13px; }
+    .scenario-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+    .scenario-buttons button { min-height: 38px; font-size: 13px; }
+    .scenario-note { margin: 10px 0 0; color: var(--muted); font-size: 12px; }
+    label { display: grid; gap: 6px; color: var(--muted); font-size: 13px; }
+    select, button {
+      min-height: 42px; border: 1px solid var(--border); border-radius: 9px;
+      background: var(--panel-raised); color: var(--text); padding: 9px 12px; font: inherit;
+    }
+    select { min-width: 280px; }
+    button { cursor: pointer; font-weight: 650; }
+    button:hover { border-color: var(--cyan); }
+    button.primary { color: #06140c; border-color: var(--green); background: var(--green); }
+    button:disabled { cursor: wait; opacity: .65; }
+    .status { min-height: 24px; margin: 10px 0 0; color: var(--muted); }
+    .status.error { color: var(--red); }
+    .day-controls { display: grid; grid-template-columns: auto minmax(160px, 1fr) auto; gap: 14px; align-items: center; margin: 22px 0 12px; padding: 16px; background: #0e1720; border: 1px solid var(--border); border-radius: 12px; }
+    .day-name { font-weight: 700; }
+    .day-caption { color: var(--muted); font-size: 13px; }
+    .day-picker { width: 100%; accent-color: var(--green); cursor: pointer; }
+    .day-nav { display: flex; justify-content: space-between; gap: 8px; }
+    .day-nav button { min-width: 44px; }
+    .groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+    .group { align-self: start; border: 1px solid var(--border); border-radius: 12px; background: #0f1821; overflow: hidden; }
+    .group summary { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 15px 16px; cursor: pointer; list-style: none; font-weight: 700; }
+    .group summary::-webkit-details-marker { display: none; }
+    .group summary::after { content: "+"; color: var(--green); font-size: 20px; line-height: 1; }
+    .group[open] summary::after { content: "−"; }
+    .group-hint { display: block; color: var(--muted); font-size: 12px; font-weight: 400; }
+    .group-fields { padding: 0 16px 8px; }
+    .field { padding: 13px 0; border-top: 1px solid #22303c; }
+    .field-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+    .field-name { color: var(--text); font-size: 14px; font-weight: 600; }
+    .field-value { color: var(--green); font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+    .field-help { margin: 3px 0 8px; color: var(--muted); font-size: 12px; }
+    input[type="range"] { width: 100%; min-height: 22px; margin: 0; accent-color: var(--green); cursor: pointer; }
+    input[type="range"]:focus-visible, select:focus, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+    .action-row { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+    .action-row .status { flex: 1; min-width: 220px; }
+    .result { display: none; margin-top: 20px; padding: 22px; border-radius: 14px; border: 1px solid #285941; background: #10251c; }
+    .result.visible { display: block; }
+    .result-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+    .result h2 { margin: 0 0 5px; font-size: 20px; }
+    .result-detail { margin: 6px 0 0; color: #c5d6ce; }
+    .score-block { min-width: 180px; text-align: right; }
+    .probability { color: var(--green); font-size: clamp(34px, 5vw, 48px); font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .risk-category { display: inline-block; margin-top: 7px; padding: 4px 10px; border-radius: 999px; background: #1d382b; color: var(--green); font-size: 12px; font-weight: 750; text-transform: uppercase; letter-spacing: .06em; }
+    .score-track { height: 9px; margin-top: 18px; overflow: hidden; border-radius: 999px; background: #25352d; }
+    .score-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #67e8a5, #f3c969, #ff8585); transition: width .3s ease; }
+    .attention { margin-top: 22px; padding-top: 18px; border-top: 1px solid #28513d; }
+    .attention h3 { margin: 0; font-size: 15px; }
+    .attention-copy { margin: 3px 0 12px; color: #c5d6ce; font-size: 12px; }
+    .attention-chart { display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 6px; align-items: end; min-height: 98px; }
+    .attention-day { display: grid; grid-template-rows: 1fr auto; gap: 6px; height: 98px; min-width: 0; text-align: center; }
+    .attention-track { display: flex; align-items: end; height: 72px; overflow: hidden; border-radius: 5px; background: #1a2a21; }
+    .attention-bar { width: 100%; min-height: 3px; border-radius: 5px 5px 0 0; background: var(--green); }
+    .attention-label { color: #c5d6ce; font-size: 10px; white-space: nowrap; }
+    .result-caveat { margin: 14px 0 0; color: #f1ddae; font-size: 12px; }
+    .disclaimer { margin: 20px 0 0; color: var(--muted); font-size: 12px; }
+    @media (max-width: 640px) {
+      main { padding: 22px 14px 40px; }
+      .panel { padding: 16px; }
+      select { min-width: 100%; width: 100%; }
+      .controls label { width: 100%; }
+      .controls button { flex: 1; }
+      .steps { grid-template-columns: 1fr; gap: 8px; }
+      .groups { grid-template-columns: 1fr; }
+      .day-controls { grid-template-columns: 1fr; gap: 8px; }
+      .day-nav { justify-content: flex-start; }
+      .result-header { display: grid; }
+      .score-block { text-align: left; }
+      .attention-chart { gap: 3px; }
+      .attention-label { font-size: 9px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="topline">
+      <a class="back" href="/prediction">← Injury Prediction</a>
+      <span class="badge">FOOTBALL · 7-DAY RISK ESTIMATE</span>
+    </div>
+    <h1>Try your data</h1>
+    <p class="intro">Adjust a day’s measurements with simple sliders and see how the model responds. Start with a sample football athlete—your edits are only used for the prediction, not saved to the sample data.</p>
+
+    <div class="steps" aria-label="How it works">
+      <div class="step"><span class="step-number">1</span>Choose an athlete<p>Start from a football sample profile.</p></div>
+      <div class="step"><span class="step-number">2</span>Adjust sliders<p>Pick a day and change the values you want to test.</p></div>
+      <div class="step"><span class="step-number">3</span>See the estimate<p>Get the estimated injury risk for the next 7 days.</p></div>
+    </div>
+
+    <div id="model-warning" class="notice warning" role="status" aria-live="polite">Checking the model’s preprocessing setup…</div>
+
+    <section class="panel" aria-label="Try an injury-risk estimate">
+      <h2 class="panel-heading">Build a test scenario</h2>
+      <p class="panel-copy">The model needs recent history, so it checks 14 days of inputs to estimate risk over the 7 days after them. You are not predicting 14 days ahead.</p>
+      <div class="controls">
+        <label for="athlete">Sample football athlete
+          <select id="athlete" aria-label="Choose a sample football athlete">
+            <option value="">Loading sample athletes…</option>
+          </select>
+        </label>
+        <button id="reload" type="button">Reset sample</button>
+      </div>
+
+      <div class="scenario-bar" aria-label="Quick presentation scenarios">
+        <h3 class="scenario-heading">Quick demo scenarios</h3>
+        <p class="scenario-copy">Apply a sample change to the last 3 days, then run the estimate.</p>
+        <div class="scenario-buttons">
+          <button type="button" data-scenario="workload">Higher recent workload</button>
+          <button type="button" data-scenario="recovery">Lower recovery signals</button>
+          <button type="button" data-scenario="combined">Combined challenge</button>
+        </div>
+        <p id="scenario-note" class="scenario-note">These are illustrative input changes, not actual athlete records. Reset sample restores the original values.</p>
+      </div>
+
+      <div class="day-controls" aria-label="Choose a day from the 14-day history">
+        <div>
+          <div id="day-name" class="day-name">Choose a day</div>
+          <div id="day-caption" class="day-caption">The model uses all 14 days</div>
+        </div>
+        <input id="day-picker" class="day-picker" type="range" min="0" max="13" value="13" step="1" aria-label="Select a day to edit">
+        <div class="day-nav">
+          <button id="previous-day" type="button" aria-label="Previous day">←</button>
+          <button id="next-day" type="button" aria-label="Next day">→</button>
+        </div>
+      </div>
+      <p class="panel-copy">Edit the selected day below. Your changes stay in place as you move between days. The prediction uses all 14 days, including sample values you leave unchanged.</p>
+      <div id="controls-groups" class="groups" aria-label="Daily measurements"></div>
+      <div class="action-row">
+        <button id="run" class="primary" type="button">Estimate next 7 days</button>
+        <p id="status" class="status" role="status" aria-live="polite">Connecting to the API…</p>
+      </div>
+      <div id="result" class="result" aria-live="polite"></div>
+      <p class="disclaimer">Research demonstration only—not a medical diagnosis or guarantee of injury. The model was trained on football data. Predictions are illustrative and are not validated for clinical decisions.</p>
+    </section>
+  </main>
+  <script>
+    const API_BASE = __API_BASE__;
+    const FEATURE_GROUPS = [
+      {
+        title: "Training & workload",
+        hint: "How hard and how long the athlete trained",
+        features: [
+          ["rpe", "Effort (RPE)", 1, 10, 0.1, "How hard the session felt: 1 is very easy; 10 is maximum effort.", " / 10"],
+          ["duration_minutes", "Training duration", 0, 180, 1, "Total time spent training or playing.", " min"],
+          ["session_rpe", "Session load", 0, 2000, 1, "Training effort multiplied by session duration.", ""],
+          ["daily_load", "Daily workload", 0, 2000, 1, "Overall training load recorded for this day.", ""],
+          ["weekly_load", "Weekly workload", 0, 15000, 10, "Accumulated workload over the recent week.", ""]
+        ]
+      },
+      {
+        title: "Wellness & recovery",
+        hint: "How the athlete is feeling and recovering",
+        features: [
+          ["fatigue", "Fatigue", 1, 10, 0.1, "How tired the athlete feels: 1 is fresh; 10 is exhausted.", " / 10"],
+          ["soreness", "Muscle soreness", 1, 10, 0.1, "How sore the athlete feels: 1 is none; 10 is severe.", " / 10"],
+          ["mood", "Mood", 1, 10, 0.1, "Self-reported mood: 1 is very low; 10 is very good.", " / 10"],
+          ["readiness", "Readiness to train", 1, 10, 0.1, "How ready the athlete feels to train or play.", " / 10"],
+          ["sleep_duration", "Sleep", 3, 10, 0.1, "Hours of sleep during the previous night.", " hrs"],
+          ["sleep_quality", "Sleep quality", 1, 10, 0.1, "Self-reported quality of sleep.", " / 10"],
+          ["stress", "Stress", 1, 10, 0.1, "Self-reported stress: 1 is low; 10 is very high.", " / 10"]
+        ]
+      },
+      {
+        title: "Movement (GPS)",
+        hint: "Distance and speed during training or play",
+        features: [
+          ["total_distance_m", "Total distance", 0, 15000, 50, "Total distance covered during the session.", " m"],
+          ["high_speed_distance_m", "High-speed distance", 0, 3000, 10, "Distance covered at high speed.", " m"],
+          ["sprint_distance_m", "Sprint distance", 0, 1000, 5, "Distance covered while sprinting.", " m"],
+          ["max_speed_m_s", "Top speed", 0, 12, 0.1, "Highest speed recorded during the session.", " m/s"],
+          ["mean_speed_m_s", "Average speed", 0, 8, 0.1, "Average speed recorded during the session.", " m/s"]
+        ]
+      },
+      {
+        title: "Injury & day context",
+        hint: "History and simple yes/no conditions",
+        features: [
+          ["prior_injury_count", "Previous injuries", 0, 10, 1, "Number of previously recorded injuries.", ""],
+          ["has_prior_injury", "Any previous injury?", 0, 1, 1, "Choose whether an injury was recorded previously.", ""],
+          ["is_rest_day", "Was this a rest day?", 0, 1, 1, "Choose whether the athlete rested instead of training.", ""],
+          ["has_gps", "GPS data available?", 0, 1, 1, "Choose whether GPS measurements were recorded.", ""],
+          ["illness_last_7d", "Illness in recent week?", 0, 1, 1, "Choose whether illness was recorded in the recent week.", ""]
+        ]
+      }
+    ];
+    const FEATURES = FEATURE_GROUPS.flatMap(group => group.features);
+    const athleteSelect = document.getElementById("athlete");
+    const groupsContainer = document.getElementById("controls-groups");
+    const dayPicker = document.getElementById("day-picker");
+    const dayName = document.getElementById("day-name");
+    const dayCaption = document.getElementById("day-caption");
+    const status = document.getElementById("status");
+    const result = document.getElementById("result");
+    const modelWarning = document.getElementById("model-warning");
+    const runButton = document.getElementById("run");
+    const scenarioNote = document.getElementById("scenario-note");
+    let records = [];
+    let activeDay = 13;
+    let activeScenario = "Sample athlete data";
+    const SCENARIO_CHANGES = {
+      workload: {
+        label: "Higher recent workload",
+        changes: { rpe: 1.5, duration_minutes: 20, session_rpe: 150, daily_load: 150, weekly_load: 500 }
+      },
+      recovery: {
+        label: "Lower recovery signals",
+        changes: { fatigue: 2, soreness: 2, readiness: -2, sleep_duration: -1, sleep_quality: -2, stress: 2 }
+      },
+      combined: {
+        label: "Combined challenge",
+        changes: { rpe: 1.5, duration_minutes: 20, session_rpe: 150, daily_load: 150, weekly_load: 500, fatigue: 2, soreness: 2, readiness: -2, sleep_duration: -1, sleep_quality: -2, stress: 2 }
+      }
+    };
+
+    async function request(path, options) {
+      const response = await fetch(API_BASE + path, options);
+      if (!response.ok) {
+        const detail = await response.text();
+        throw new Error(`API error ${response.status}: ${detail}`);
+      }
+      return response.json();
+    }
+
+    function setStatus(message, isError) {
+      status.textContent = message;
+      status.classList.toggle("error", Boolean(isError));
+    }
+
+    function formatValue(value, step, unit) {
+      const digits = step < 1 ? 1 : 0;
+      const formatted = Number(value).toLocaleString(undefined, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      });
+      return `${formatted}${unit}`;
+    }
+
+    function applyScenario(name) {
+      if (records.length !== 14) return;
+      const scenario = SCENARIO_CHANGES[name];
+      if (!scenario) return;
+      const featureRanges = new Map(FEATURES.map(([key, , min, max]) => [key, { min, max }]));
+      for (const record of records.slice(-3)) {
+        for (const [key, change] of Object.entries(scenario.changes)) {
+          const { min, max } = featureRanges.get(key);
+          record[key] = Math.min(max, Math.max(min, Number(record[key]) + change));
+        }
+      }
+      activeScenario = scenario.label;
+      scenarioNote.textContent = `${scenario.label} applied to the last 3 days. Review the sliders or reset the sample to start over.`;
+      result.classList.remove("visible");
+      renderControls();
+      setStatus(`${scenario.label} applied to the last 3 days. Run the estimate to see the model output.`);
+    }
+
+    function renderControls() {
+      if (records.length !== 14) return;
+      const record = records[activeDay];
+      dayPicker.value = String(activeDay);
+      dayName.textContent = new Date(`${record.date}T12:00:00`).toLocaleDateString(undefined, {
+        weekday: "long", month: "short", day: "numeric"
+      });
+      dayCaption.textContent = `Day ${activeDay + 1} of 14 · ${activeDay === 13 ? "most recent day" : "past history"}`;
+      document.getElementById("previous-day").disabled = activeDay === 0;
+      document.getElementById("next-day").disabled = activeDay === 13;
+
+      groupsContainer.replaceChildren();
+      for (const [groupIndex, group] of FEATURE_GROUPS.entries()) {
+        const details = document.createElement("details");
+        details.className = "group";
+        details.open = groupIndex < 2;
+        const summary = document.createElement("summary");
+        summary.innerHTML = `<span>${group.title}<span class="group-hint">${group.hint}</span></span>`;
+        details.append(summary);
+        const fields = document.createElement("div");
+        fields.className = "group-fields";
+
+        for (const [key, label, min, max, step, help, unit] of group.features) {
+          const field = document.createElement("div");
+          field.className = "field";
+          const top = document.createElement("div");
+          top.className = "field-top";
+          const name = document.createElement("label");
+          name.className = "field-name";
+          name.htmlFor = `field-${key}`;
+          name.textContent = label;
+          const output = document.createElement("output");
+          output.className = "field-value";
+          output.htmlFor = `field-${key}`;
+          output.id = `value-${key}`;
+          const value = Number(record[key]);
+          output.value = key === "has_prior_injury" || key === "is_rest_day" || key === "has_gps" || key === "illness_last_7d"
+            ? (value ? "Yes" : "No")
+            : formatValue(value, step, unit);
+          top.append(name, output);
+          const hint = document.createElement("p");
+          hint.className = "field-help";
+          hint.textContent = help;
+          const input = document.createElement("input");
+          input.type = "range";
+          input.id = `field-${key}`;
+          input.name = key;
+          input.min = String(min);
+          input.max = String(max);
+          input.step = String(step);
+          input.value = String(value);
+          input.setAttribute("aria-label", `${label}, ${record.date}`);
+          input.setAttribute("aria-valuetext", output.value);
+          input.addEventListener("input", () => {
+            const updatedValue = Number(input.value);
+            records[activeDay][key] = updatedValue;
+            output.value = key === "has_prior_injury" || key === "is_rest_day" || key === "has_gps" || key === "illness_last_7d"
+              ? (updatedValue ? "Yes" : "No")
+              : formatValue(updatedValue, step, unit);
+            input.setAttribute("aria-valuetext", output.value);
+            result.classList.remove("visible");
+            setStatus(`Changed ${label} for ${dayName.textContent}. Your changes are used when you run the estimate.`);
+          });
+          field.append(top, hint, input);
+          fields.append(field);
+        }
+        details.append(fields);
+        groupsContainer.append(details);
+      }
+    }
+
+    async function loadAthletes() {
+      setStatus("Loading sample football athletes…");
+      try {
+        const athletes = (await request("/api/v1/athletes"))
+          .filter(athlete => athlete.sport === "Football");
+        athleteSelect.replaceChildren();
+        if (!athletes.length) {
+          throw new Error("No football athletes found in the sample data.");
+        }
+        for (const athlete of athletes) {
+          const option = document.createElement("option");
+          option.value = athlete.id;
+          option.textContent = `${athlete.name} · ${athlete.position}`;
+          athleteSelect.append(option);
+        }
+        await loadRecords(athleteSelect.value);
+      } catch (error) {
+        setStatus(error.message || "Could not load athletes. Check that the backend is running.", true);
+      }
+    }
+
+    async function loadModelStatus() {
+      try {
+        const modelInfo = await request("/api/v1/dashboard/model-info");
+        if (modelInfo.preprocessing_mode === "training_statistics") {
+          modelWarning.textContent = "Training-time preprocessing settings are loaded. This is still a research demonstration, not a medical assessment.";
+          modelWarning.classList.remove("warning");
+        } else {
+          modelWarning.textContent = "Important: this checkpoint is missing its original training-time scaling settings. It scales each 14-day input separately, so treat its result as illustrative—not a validated prediction.";
+        }
+      } catch (error) {
+        modelWarning.textContent = `Could not verify model preprocessing: ${error.message || "check the API connection."}`;
+      }
+    }
+
+    async function loadRecords(athleteId) {
+      if (!athleteId) return;
+      result.classList.remove("visible");
+      setStatus("Loading the athlete’s latest 14 days…");
+      try {
+        const history = await request(`/api/v1/athletes/${encodeURIComponent(athleteId)}/history`);
+        if (!Array.isArray(history.daily_records) || history.daily_records.length < 14) {
+          throw new Error("This athlete needs at least 14 daily records before a prediction can run.");
+        }
+        records = history.daily_records.slice(-14).map(record => ({ ...record }));
+        activeDay = records.length - 1;
+        activeScenario = "Sample athlete data";
+        scenarioNote.textContent = "These are illustrative input changes, not actual athlete records. Reset sample restores the original values.";
+        dayPicker.max = String(records.length - 1);
+        renderControls();
+        setStatus(`Ready. You can adjust any day; the model uses all 14 days to estimate the next 7.`);
+      } catch (error) {
+        setStatus(error.message || "Could not load athlete data.", true);
+      }
+    }
+
+    function validateRecords() {
+      if (records.length !== 14 || records.some(record => FEATURES.some(([key]) => !Number.isFinite(record[key])))) {
+        throw new Error("The model needs 14 complete days of data. Reset the sample and check the values.");
+      }
+    }
+
+    async function runPrediction() {
+      runButton.disabled = true;
+      result.classList.remove("visible");
+      try {
+        validateRecords();
+        setStatus("Running the trained model…");
+        const prediction = await request("/api/v1/predictions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            athlete_id: athleteSelect.value,
+            sequence: records.map(record => FEATURES.map(([key]) => record[key]))
+          })
+        });
+        const probabilityValue = Math.min(1, Math.max(0, Number(prediction.predicted_probability)));
+        const percent = (probabilityValue * 100).toFixed(1);
+        const heading = document.createElement("h2");
+        heading.textContent = "Estimated risk in the next 7 days";
+        const summary = document.createElement("p");
+        summary.className = "result-detail";
+        summary.textContent = `${activeScenario} · 14-day input ending ${new Date(`${records[13].date}T12:00:00`).toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })}.`;
+        const probability = document.createElement("div");
+        probability.className = "probability";
+        probability.textContent = `${percent}%`;
+        const category = document.createElement("strong");
+        category.className = "risk-category";
+        category.textContent = prediction.risk_category;
+        const source = document.createElement("p");
+        source.className = "result-detail";
+        source.textContent = `Model: ${prediction.model_version}. This estimate is not a diagnosis.`;
+        const scoreBlock = document.createElement("div");
+        scoreBlock.className = "score-block";
+        scoreBlock.append(probability, document.createElement("br"), category);
+        const resultHeader = document.createElement("div");
+        resultHeader.className = "result-header";
+        const resultTitle = document.createElement("div");
+        resultTitle.append(heading, summary, source);
+        resultHeader.append(resultTitle, scoreBlock);
+        const scoreTrack = document.createElement("div");
+        scoreTrack.className = "score-track";
+        scoreTrack.setAttribute("role", "img");
+        scoreTrack.setAttribute("aria-label", `Estimated risk score: ${percent} percent`);
+        const scoreFill = document.createElement("div");
+        scoreFill.className = "score-fill";
+        scoreFill.style.width = `${probabilityValue * 100}%`;
+        scoreTrack.append(scoreFill);
+        const attention = document.createElement("section");
+        attention.className = "attention";
+        const attentionHeading = document.createElement("h3");
+        attentionHeading.textContent = "Where the model focused";
+        const attentionCopy = document.createElement("p");
+        attentionCopy.className = "attention-copy";
+        attentionCopy.textContent = "Relative attention across the 14 input days. This shows model focus, not cause or proof of injury.";
+        const attentionChart = document.createElement("div");
+        attentionChart.className = "attention-chart";
+        attentionChart.setAttribute("role", "img");
+        attentionChart.setAttribute("aria-label", "Relative model attention for each of the 14 input days");
+        const weights = Array.isArray(prediction.attention_weights) && prediction.attention_weights.length === 14
+          ? prediction.attention_weights.map(weight => Math.max(0, Number(weight) || 0))
+          : Array(14).fill(1);
+        const maxWeight = Math.max(...weights, Number.EPSILON);
+        weights.forEach((weight, index) => {
+          const day = document.createElement("div");
+          day.className = "attention-day";
+          day.title = `Day ${index + 1}: ${records[index].date}, relative attention ${(weight * 100).toFixed(1)}%`;
+          const track = document.createElement("div");
+          track.className = "attention-track";
+          const bar = document.createElement("div");
+          bar.className = "attention-bar";
+          bar.style.height = `${Math.max(4, (weight / maxWeight) * 100)}%`;
+          track.append(bar);
+          const label = document.createElement("span");
+          label.className = "attention-label";
+          label.textContent = `D${index + 1}`;
+          day.append(track, label);
+          attentionChart.append(day);
+        });
+        attention.append(attentionHeading, attentionCopy, attentionChart);
+        const caveat = document.createElement("p");
+        caveat.className = "result-caveat";
+        caveat.textContent = "Research demonstration only. The score is not validated for clinical decisions and should not guide return-to-play decisions.";
+        result.replaceChildren(resultHeader, scoreTrack, attention, caveat);
+        result.classList.add("visible");
+        setStatus("Estimate complete. Your adjusted 14-day history was used.");
+      } catch (error) {
+        setStatus(error.message || "Prediction failed. Check the backend and model status.", true);
+      } finally {
+        runButton.disabled = false;
+      }
+    }
+
+    athleteSelect.addEventListener("change", () => loadRecords(athleteSelect.value));
+    document.getElementById("reload").addEventListener("click", () => loadRecords(athleteSelect.value));
+    document.querySelectorAll("[data-scenario]").forEach(button => {
+      button.addEventListener("click", () => applyScenario(button.dataset.scenario));
+    });
+    runButton.addEventListener("click", runPrediction);
+    dayPicker.addEventListener("input", () => {
+      activeDay = Number(dayPicker.value);
+      renderControls();
+    });
+    document.getElementById("previous-day").addEventListener("click", () => {
+      if (activeDay > 0) {
+        activeDay -= 1;
+        renderControls();
+      }
+    });
+    document.getElementById("next-day").addEventListener("click", () => {
+      if (activeDay < records.length - 1) {
+        activeDay += 1;
+        renderControls();
+      }
+    });
+    loadModelStatus();
+    loadAthletes();
+  </script>
+</body>
+</html>

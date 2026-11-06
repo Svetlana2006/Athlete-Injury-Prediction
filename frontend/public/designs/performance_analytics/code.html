@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#bfc6df", "on-surface": "#dde2f4", "on-primary": "#003911", "surface-bright": "#333947", "on-primary-container": "#006223", "on-tertiary-fixed": "#131b2d", "on-tertiary-fixed-variant": "#3f465b", "tertiary-container": "#c1c8e1", "on-secondary-container": "#a9b9db", "primary-container": "#10e760", "primary": "#7fff91", "on-secondary-fixed": "#091b36", "tertiary-fixed": "#dbe2fb", "surface-dim": "#0d131f", "on-secondary": "#20304d", "surface-container-high": "#242a37", "surface-variant": "#2f3542", "secondary-fixed-dim": "#b7c7ea", "surface-tint": "#04e55e", "surface-container": "#1a202c", "surface": "#0d131f", "surface-container-lowest": "#080e1a", "on-background": "#dde2f4", "primary-fixed": "#6aff85", "inverse-surface": "#dde2f4", "secondary-fixed": "#d7e2ff", "tertiary": "#dde4fe", "secondary-container": "#3a4967", "error-container": "#93000a", "surface-container-low": "#161c28", "primary-fixed-dim": "#04e55e", "surface-container-highest": "#2f3542", "background": "#0d131f", "on-error": "#690005", "on-primary-fixed": "#002107", "on-primary-fixed-variant": "#00531d", "outline": "#859582", "outline-variant": "#3c4b3b", "on-secondary-fixed-variant": "#374764", "inverse-primary": "#006e29", "on-error-container": "#ffdad6", "on-tertiary": "#283043", "on-tertiary-container": "#4c5468", "inverse-on-surface": "#2a303e", "error": "#ffb4ab", "on-surface-variant": "bacbb7", "secondary": "#b7c7ea" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "2.5rem", "gutter": "1.5rem", "margin-mobile": "1rem", "margin": "2.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-md": "1rem", "gutter-mobile": "1rem", "space-sm": "0.5rem" }, "fontFamily": { "kpi-stat": [ "Space Grotesk" ], "headline-xl": [ "Space Grotesk" ], "headline-sm": [ "Space Grotesk" ], "headline-md": [ "Space Grotesk" ], "headline-lg": [ "Space Grotesk" ], "label-sm": [ "JetBrains Mono" ], "body-lg": [ "Geist" ], "label-md": [ "JetBrains Mono" ], "body-md": [ "Geist" ], "headline-lg-mobile": [ "Space Grotesk" ], "body-sm": [ "Geist" ], "headline-xl-mobile": [ "Space Grotesk" ] }, "fontSize": { "kpi-stat": [ "36px", { "lineHeight": "44px", "fontWeight": "700" } ], "headline-xl": [ "40px", { "lineHeight": "48px", "fontWeight": "600" } ], "headline-sm": [ "18px", { "lineHeight": "26px", "fontWeight": "500" } ], "headline-md": [ "22px", { "lineHeight": "30px", "fontWeight": "500" } ], "headline-lg": [ "30px", { "lineHeight": "38px", "fontWeight": "600" } ], "label-sm": [ "11px", { "lineHeight": "16px", "fontWeight": "500" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "label-md": [ "13px", { "lineHeight": "18px", "fontWeight": "500" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ], "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "fontWeight": "600" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "headline-xl-mobile": [ "28px", { "lineHeight": "36px", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-low z-50 flex flex-col justify-between py-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col gap-space-lg"><div class="px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 rounded bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-on-primary-container text-[18px]">sports_and_outdoors</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface font-bold">ATHLETE<span class="text-primary">IQ</span></span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">AI Biometrics</span></div></div><div class="px-space-xs py-0.5 rounded bg-surface-container-high text-primary font-label-sm text-label-sm">v2.4</div></div><nav class="flex flex-col gap-1 px-space-md" data-active-classes="bg-secondary-container text-on-surface font-medium"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="overview" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="font-body-md text-body-md">Overview</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="athletes" href="#"><span class="material-symbols-outlined text-[20px]">groups</span><span class="font-body-md text-body-md">Athletes</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="injury-prediction" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[20px]">vital_signs</span><span class="font-body-md text-body-md">Injury Prediction</span></div><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-highest text-primary">ML MODEL</span></a><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg transition-colors bg-secondary-container text-on-surface font-medium" data-path="performance-analytics" href="#"><span class="material-symbols-outlined text-[20px]">analytics</span><span class="font-body-md text-body-md">Performance Analytics</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="model-insights" href="#"><span class="material-symbols-outlined text-[20px]">model_training</span><span class="font-body-md text-body-md">Model Insights</span></a></nav></div><div class="px-space-md"><div class="p-space-md rounded-xl bg-surface-container flex flex-col gap-space-xs"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">PyTorch Inference</span><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span><span class="font-label-sm text-label-sm text-primary">Online</span></div></div><div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>Latency: 14ms</span><span>Sync: 99.8%</span></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant text-body-sm font-body-sm"><span class="material-symbols-outlined text-[16px] text-primary">memory</span><span>Production Model v2.4 (Transformer + Focal Loss)</span></div></div><div class="flex items-center gap-space-md"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[18px]">search</span><input class="w-64 pl-9 pr-space-md py-1.5 bg-surface-container-low rounded-lg text-body-sm font-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Search athlete, bio-metric ID..." type="text"/></div><button aria-label="Notifications" class="p-2 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span></button><div class="flex items-center gap-space-sm pl-space-sm"><div class="flex flex-col text-right hidden sm:flex"><span class="font-body-sm text-body-sm text-on-surface font-medium leading-none">Dr. Marcus Vance</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none mt-1">Head of Sports Science</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="w-full pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<div class="px-margin py-space-xl flex flex-col gap-space-xl max-w-[1600px] mx-auto w-full">
+<!-- Top Filter & Selector Bar -->
+<div class="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-space-lg bg-surface-container-low p-space-md rounded-xl shadow-sm">
+<div class="flex flex-wrap items-center gap-space-md">
+<!-- Athlete Selector -->
+<div class="relative min-w-[280px]">
+<div class="flex items-center gap-space-md bg-surface-container px-space-md py-space-sm rounded-lg cursor-pointer hover:bg-surface-container-high transition-colors">
+<div class="w-10 h-10 rounded-full bg-surface-bright flex items-center justify-center font-headline-sm text-headline-sm text-primary font-bold">
+              MS
+            </div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-body-md text-on-surface font-semibold truncate leading-tight">Marcus Sterling</span>
+<span class="font-label-sm text-label-sm text-outline tracking-wider">#ATH-101 • Right Winger</span>
+</div>
+<span class="material-symbols-outlined text-outline ml-auto text-[20px]">expand_more</span>
+</div>
+</div>
+<div class="h-8 w-px bg-surface-variant hidden sm:block"></div>
+<!-- Sport / Squad Filter -->
+<div class="flex items-center gap-space-xs bg-surface-container px-space-md py-2.5 rounded-lg text-on-surface text-body-sm font-body-sm">
+<span class="material-symbols-outlined text-outline text-[18px]">sports_soccer</span>
+<span class="font-medium">Football First XI</span>
+</div>
+</div>
+<!-- Controls: Horizon & Compare -->
+<div class="flex flex-wrap items-center gap-space-md justify-between xl:justify-end">
+<!-- Time Horizon Pills -->
+<div class="flex items-center p-1 bg-surface-container rounded-lg gap-1">
+<button class="px-space-md py-1.5 rounded text-on-surface-variant font-label-md text-label-md hover:text-on-surface hover:bg-surface-container-high transition-colors">7D</button>
+<button class="px-space-md py-1.5 rounded text-on-surface-variant font-label-md text-label-md hover:text-on-surface hover:bg-surface-container-high transition-colors">14D</button>
+<button class="px-space-md py-1.5 rounded bg-primary-container text-on-primary-container font-label-md text-label-md font-semibold transition-colors">30D</button>
+<button class="px-space-md py-1.5 rounded text-on-surface-variant font-label-md text-label-md hover:text-on-surface hover:bg-surface-container-high transition-colors">Custom</button>
+</div>
+<!-- Squad Benchmark Button -->
+<button class="flex items-center gap-space-sm bg-surface-container-high px-space-md py-2 rounded-lg text-on-surface font-label-md text-label-md hover:bg-surface-bright transition-colors" id="squadToggle">
+<span class="material-symbols-outlined text-primary text-[18px]">compare_arrows</span>
+<span>Compare vs Squad</span>
+</button>
+</div>
+</div>
+<!-- Key Performance Ratios: Clean 3-Card Summary -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Card 1: ACWR -->
+<div class="bg-surface-container p-space-lg rounded-xl flex flex-col justify-between shadow-sm relative overflow-hidden group hover:bg-surface-container-high transition-colors">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Acute:Chronic Workload Ratio</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Optimal Window: 0.80 — 1.30</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-error-container text-error font-label-sm text-label-sm font-semibold tracking-wide">HIGH RISK</span>
+</div>
+<div class="flex items-baseline gap-space-md mt-space-lg">
+<span class="font-kpi-stat text-kpi-stat text-on-surface">1.58</span>
+<span class="font-label-md text-label-md text-error flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+            +0.34 over baseline
+          </span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1.5 rounded-full mt-space-md overflow-hidden">
+<div class="bg-error h-full rounded-full w-[78%]"></div>
+</div>
+</div>
+<!-- Card 2: 7-Day Mean Workload -->
+<div class="bg-surface-container p-space-lg rounded-xl flex flex-col justify-between shadow-sm relative overflow-hidden group hover:bg-surface-container-high transition-colors">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">7-Day Mean Workload</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Chronic Rolling: 510 AU</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-tertiary font-label-sm text-label-sm font-semibold tracking-wide">ELEVATED</span>
+</div>
+<div class="flex items-baseline gap-space-md mt-space-lg">
+<span class="font-kpi-stat text-kpi-stat text-on-surface">642</span>
+<span class="font-label-md text-label-md text-tertiary-fixed-dim">AU / session</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1.5 rounded-full mt-space-md overflow-hidden">
+<div class="bg-tertiary h-full rounded-full w-[64%]"></div>
+</div>
+</div>
+<!-- Card 3: Recovery Balance Score -->
+<div class="bg-surface-container p-space-lg rounded-xl flex flex-col justify-between shadow-sm relative overflow-hidden group hover:bg-surface-container-high transition-colors">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Recovery Balance Index</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Squad Benchmark: 82%</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-error-container text-error font-label-sm text-label-sm font-semibold tracking-wide">-18% DEFICIT</span>
+</div>
+<div class="flex items-baseline gap-space-md mt-space-lg">
+<span class="font-kpi-stat text-kpi-stat text-error">64%</span>
+<span class="font-label-md text-label-md text-outline">Suppressed state</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1.5 rounded-full mt-space-md overflow-hidden">
+<div class="bg-error h-full rounded-full w-[64%]"></div>
+</div>
+</div>
+</div>
+<!-- Core Visualizations: 2x2 Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+<!-- Chart 1: Workload Dynamics (Acute vs Chronic) -->
+<div class="bg-surface-container p-space-lg rounded-xl flex flex-col justify-between shadow-sm">
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-space-md">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Workload Dynamics (Acute vs Chronic)</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">7-day exponential load tracking against 28-day baseline envelope</p>
+</div>
+<div class="flex items-center gap-space-md font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-0.5 bg-primary rounded-full"></span>
+<span class="text-on-surface-variant">Acute (7D)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-0.5 bg-secondary rounded-full"></span>
+<span class="text-on-surface-variant">Chronic (28D)</span>
+</div>
+</div>
+</div>
+<!-- SVG Dual Line Workload Chart -->
+<div class="relative w-full h-64 mt-space-sm">
+<svg class="w-full h-full" fill="none" preserveaspectratio="none" viewbox="0 0 600 240">
+<!-- Background Zone Bands -->
+<!-- Safe Sweet Spot zone (ACWR ~0.8-1.3 -> mapped vertically Y:110 to Y:170) -->
+<rect fill="rgba(127, 255, 145, 0.05)" height="55" width="600" x="0" y="115"></rect>
+<!-- Danger Overload zone (ACWR > 1.5 -> mapped vertically Y:0 to Y:85) -->
+<rect fill="rgba(255, 180, 171, 0.08)" height="65" width="600" x="0" y="20"></rect>
+<!-- Gridlines -->
+<line class="text-surface-variant" stroke="currentColor" stroke-dasharray="3 3" x1="0" x2="600" y1="20" y2="20"></line>
+<text class="fill-error font-label-sm text-[10px]" x="8" y="32">Overload Zone (&gt;1.50)</text>
+<line class="text-surface-variant" stroke="currentColor" stroke-dasharray="3 3" x1="0" x2="600" y1="85" y2="85"></line>
+<line class="text-surface-variant" stroke="currentColor" stroke-dasharray="3 3" x1="0" x2="600" y1="140" y2="140"></line>
+<text class="fill-primary font-label-sm text-[10px]" x="8" y="132">Optimal Range (0.8 - 1.3)</text>
+<line class="text-surface-variant" stroke="currentColor" stroke-dasharray="3 3" x1="0" x2="600" y1="200" y2="200"></line>
+<!-- Chronic Baseline (Secondary solid/muted line) -->
+<path class="text-secondary" d="M 0,165 C 100,162 200,158 300,155 C 400,150 500,148 600,145" fill="none" stroke="currentColor" stroke-dasharray="4 2" stroke-width="2.5"></path>
+<!-- Acute Load (Dynamic Lime Path crossing into overload) -->
+<path class="text-primary" d="M 0,160 C 80,155 140,170 220,135 C 300,95 380,120 460,65 C 520,38 560,32 600,30" fill="none" stroke="currentColor" stroke-width="3"></path>
+<!-- Critical Overload Point -->
+<circle class="fill-primary" cx="460" cy="65" r="4.5"></circle>
+<circle class="fill-error" cx="600" cy="30" r="5"></circle>
+</svg>
+</div>
+<div class="flex items-center justify-between text-outline font-label-sm text-label-sm pt-space-sm">
+<span>Day -30</span>
+<span>Day -21</span>
+<span>Day -14</span>
+<span>Day -7</span>
+<span class="text-on-surface font-semibold">Today (Elevated)</span>
+</div>
+</div>
+<!-- Chart 2: Cardiac & Autonomic Recovery (HRV vs Resting HR) -->
+<div class="bg-surface-container p-space-lg rounded-xl flex flex-col justify-between shadow-sm">
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-space-md">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Cardiac &amp; Autonomic Recovery</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Sympathetic dominance indicated by reciprocal HR divergence</p>
+</div>
+<div class="flex items-center gap-space-md font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-0.5 bg-tertiary rounded-full"></span>
+<span class="text-on-surface-variant">HRV rMSSD</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-0.5 bg-error rounded-full"></span>
+<span class="text-on-surface-variant">Resting HR</span>
+</div>
+</div>
+</div>
+<!-- SVG Dual Axis Divergence Chart -->
+<div class="relative w-full h-64 mt-space-sm">
+<svg class="w-full h-full" fill="none" preserveaspectratio="none" viewbox="0 0 600 240">
+<!-- Gridlines -->
+<line class="text-surface-variant" stroke="currentColor" stroke-dasharray="3 3" x1="0" x2="600" y1="40" y2="40"></line>
+<line class="text-surface-variant" stroke="currentColor" stroke-dasharray="3 3" x1="0" x2="600" y1="120" y2="120"></line>
+<line class="text-surface-variant" stroke="currentColor" stroke-dasharray="3 3" x1="0" x2="600" y1="200" y2="200"></line>
+<!-- Left Axis & Right Axis Markers -->
+<text class="fill-tertiary font-label-sm text-[10px]" x="6" y="32">70 ms (rMSSD)</text>
+<text class="fill-error font-label-sm text-[10px]" x="500" y="32">65 bpm (RHR)</text>
+<!-- HRV Series (Dropping from 68ms -> 42ms) -->
+<path class="text-tertiary" d="M 0,48 C 120,52 240,65 360,110 C 440,140 520,175 600,195" fill="none" stroke="currentColor" stroke-width="2.5"></path>
+<!-- Resting HR Series (Rising from 52bpm -> 61bpm) -->
+<path class="text-error" d="M 0,185 C 120,180 240,165 360,135 C 440,105 520,80 600,60" fill="none" stroke="currentColor" stroke-width="2.5"></path>
+<!-- Current Value Callouts -->
+<circle class="fill-tertiary" cx="600" cy="195" r="4.5"></circle>
+<circle class="fill-error" cx="600" cy="60" r="4.5"></circle>
+</svg>
+</div>
+<div class="flex items-center justify-between text-outline font-label-sm text-label-sm pt-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="text-on-surface">Baseline:</span>
+<span>68ms HRV / 52bpm RHR</span>
+</div>
+<div class="flex items-center gap-space-sm text-right">
+<span class="text-error font-semibold">Today:</span>
+<span class="text-on-surface">42ms HRV / 61bpm RHR</span>
+</div>
+</div>
+</div>
+<!-- Chart 3: Movement Intensity & High-Speed GPS -->
+<div class="bg-surface-container p-space-lg rounded-xl flex flex-col justify-between shadow-sm">
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-space-md">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Movement Intensity &amp; High-Speed GPS</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Last 6 microcycle sessions sprint load vs high-speed running</p>
+</div>
+<div class="flex items-center gap-space-md font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 bg-primary rounded-sm"></span>
+<span class="text-on-surface-variant">Sprint (&gt;25.2 km/h)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 bg-secondary-container rounded-sm"></span>
+<span class="text-on-surface-variant">HSR (&gt;19.8 km/h)</span>
+</div>
+</div>
+</div>
+<!-- High Precision Bar Chart -->
+<div class="relative w-full h-64 flex items-end justify-between gap-2 px-2 pt-8">
+<!-- Session MD-5 -->
+<div class="flex-1 flex flex-col items-center h-full justify-end group">
+<div class="w-full max-w-[48px] flex flex-col justify-end h-[60%] gap-1">
+<div class="bg-primary rounded-t-sm w-full h-[32%] transition-all group-hover:brightness-110"></div>
+<div class="bg-secondary-container rounded-b-sm w-full h-[68%] transition-all group-hover:brightness-110"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-3">MD-5</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">520m</span>
+</div>
+<!-- Session MD-4 -->
+<div class="flex-1 flex flex-col items-center h-full justify-end group">
+<div class="w-full max-w-[48px] flex flex-col justify-end h-[75%] gap-1">
+<div class="bg-primary rounded-t-sm w-full h-[40%] transition-all group-hover:brightness-110"></div>
+<div class="bg-secondary-container rounded-b-sm w-full h-[60%] transition-all group-hover:brightness-110"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-3">MD-4</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">690m</span>
+</div>
+<!-- Session MD-3 (Peak Load) -->
+<div class="flex-1 flex flex-col items-center h-full justify-end group">
+<div class="w-full max-w-[48px] flex flex-col justify-end h-[96%] gap-1">
+<div class="bg-primary rounded-t-sm w-full h-[45%] transition-all group-hover:brightness-110"></div>
+<div class="bg-secondary-container rounded-b-sm w-full h-[55%] transition-all group-hover:brightness-110"></div>
+</div>
+<span class="font-label-sm text-label-sm text-error mt-3 font-semibold">MD-3</span>
+<span class="font-label-sm text-[10px] text-error font-medium">910m</span>
+</div>
+<!-- Session MD-2 -->
+<div class="flex-1 flex flex-col items-center h-full justify-end group">
+<div class="w-full max-w-[48px] flex flex-col justify-end h-[45%] gap-1">
+<div class="bg-primary rounded-t-sm w-full h-[25%] transition-all group-hover:brightness-110"></div>
+<div class="bg-secondary-container rounded-b-sm w-full h-[75%] transition-all group-hover:brightness-110"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-3">MD-2</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">410m</span>
+</div>
+<!-- Session MD-1 -->
+<div class="flex-1 flex flex-col items-center h-full justify-end group">
+<div class="w-full max-w-[48px] flex flex-col justify-end h-[30%] gap-1">
+<div class="bg-primary rounded-t-sm w-full h-[18%] transition-all group-hover:brightness-110"></div>
+<div class="bg-secondary-container rounded-b-sm w-full h-[82%] transition-all group-hover:brightness-110"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-3">MD-1</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">280m</span>
+</div>
+<!-- Session MD Match -->
+<div class="flex-1 flex flex-col items-center h-full justify-end group">
+<div class="w-full max-w-[48px] flex flex-col justify-end h-[88%] gap-1">
+<div class="bg-primary rounded-t-sm w-full h-[42%] transition-all group-hover:brightness-110"></div>
+<div class="bg-secondary-container rounded-b-sm w-full h-[58%] transition-all group-hover:brightness-110"></div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface mt-3 font-semibold">MD</span>
+<span class="font-label-sm text-[10px] text-on-surface">820m</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-outline font-label-sm text-label-sm pt-space-sm">
+<span>Target Cap: ≤ 350m HSR per taper</span>
+<span class="text-tertiary-fixed-dim">Sprint Accumulation: 1,420m</span>
+</div>
+</div>
+<!-- Chart 4: Bilateral Force & Mechanical Symmetry -->
+<div class="bg-surface-container p-space-lg rounded-xl flex flex-col justify-between shadow-sm">
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-space-md">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Bilateral Force &amp; Mechanical Symmetry</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Ground reaction contact bias &amp; eccentric deceleration distribution</p>
+</div>
+<span class="px-2 py-0.5 rounded bg-error-container text-error font-label-sm text-label-sm font-semibold tracking-wide">8.4% ASYMMETRY</span>
+</div>
+<div class="flex flex-col justify-center h-64 gap-space-lg px-2">
+<!-- Footstrike Distribution Progress -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-baseline">
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Left Foot Strike (Dominant Bias)</span>
+<span class="font-kpi-stat text-headline-md text-error">54.2%</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-3 rounded-full overflow-hidden flex">
+<div class="bg-error h-full rounded-l-full transition-all" style="width: 54.2%"></div>
+<div class="bg-surface-container-high h-full rounded-r-full flex-1"></div>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-baseline">
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Right Foot Strike (Offloaded)</span>
+<span class="font-kpi-stat text-headline-md text-primary">45.8%</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-3 rounded-full overflow-hidden flex">
+<div class="bg-primary h-full rounded-l-full transition-all" style="width: 45.8%"></div>
+<div class="bg-surface-container-high h-full rounded-r-full flex-1"></div>
+</div>
+</div>
+<!-- Symmetry Visual Needle -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-error text-[20px]">warning</span>
+<span class="font-body-sm text-body-sm text-on-surface">Right Hamstring compensation pattern detected</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Tolerance: ±3.5%</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-outline font-label-sm text-label-sm pt-space-sm">
+<span>Gait Analysis Sensor: Catapult Vector 7</span>
+<span class="text-error font-medium">Action Required: Kinetic Protocol</span>
+</div>
+</div>
+</div>
+<!-- Actionable Summary Banner -->
+<div class="bg-surface-container-high p-space-lg rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-space-lg shadow-sm">
+<div class="flex items-start md:items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[28px]">medical_services</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-bold uppercase tracking-wider">Clinical Sports Science Directive</span>
+<span class="font-label-sm text-label-sm text-outline">Issued by AI Performance Engine • Confidence 94.2%</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface font-medium leading-snug">
+            Recommendation: Cap next matchday high-speed volume to ≤ 350m. Prescribe recovery protocol MD+1.
+          </p>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-space-md self-end md:self-center shrink-0">
+<button class="px-space-md py-2.5 rounded bg-surface-container text-on-surface font-body-sm text-body-sm hover:bg-surface-bright transition-colors font-medium">
+          Export Bio-Report
+        </button>
+<button class="px-space-lg py-2.5 rounded bg-primary-container text-on-primary-container font-body-sm text-body-sm font-semibold hover:bg-primary transition-colors shadow-sm">
+          Apply Workload Cap
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const squadToggle = document.getElementById('squadToggle');
+    if (squadToggle) {
+      let active = false;
+      squadToggle.addEventListener('click', function() {
+        active = !active;
+        if (active) {
+          squadToggle.classList.add('bg-primary-container', 'text-on-primary-container');
+          squadToggle.classList.remove('bg-surface-container-high', 'text-on-surface');
+        } else {
+          squadToggle.classList.remove('bg-primary-container', 'text-on-primary-container');
+          squadToggle.classList.add('bg-surface-container-high', 'text-on-surface');
+        }
+      });
+    }
+  })();
+</script></main></div></body></html>

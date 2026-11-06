@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#bfc6df", "on-surface": "#dde2f4", "on-primary": "#003911", "surface-bright": "#333947", "on-primary-container": "#006223", "on-tertiary-fixed": "#131b2d", "on-tertiary-fixed-variant": "#3f465b", "tertiary-container": "#c1c8e1", "on-secondary-container": "#a9b9db", "primary-container": "#10e760", "primary": "#7fff91", "on-secondary-fixed": "#091b36", "tertiary-fixed": "#dbe2fb", "surface-dim": "#0d131f", "on-secondary": "#20304d", "surface-container-high": "#242a37", "surface-variant": "#2f3542", "secondary-fixed-dim": "#b7c7ea", "surface-tint": "#04e55e", "surface-container": "#1a202c", "surface": "#0d131f", "surface-container-lowest": "#080e1a", "on-background": "#dde2f4", "primary-fixed": "#6aff85", "inverse-surface": "#dde2f4", "secondary-fixed": "#d7e2ff", "tertiary": "#dde4fe", "secondary-container": "#3a4967", "error-container": "#93000a", "surface-container-low": "#161c28", "primary-fixed-dim": "#04e55e", "surface-container-highest": "#2f3542", "background": "#0d131f", "on-error": "#690005", "on-primary-fixed": "#002107", "on-primary-fixed-variant": "#00531d", "outline": "#859582", "outline-variant": "#3c4b3b", "on-secondary-fixed-variant": "#374764", "inverse-primary": "#006e29", "on-error-container": "#ffdad6", "on-tertiary": "#283043", "on-tertiary-container": "#4c5468", "inverse-on-surface": "#2a303e", "error": "#ffb4ab", "on-surface-variant": "bacbb7", "secondary": "#b7c7ea" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "2.5rem", "gutter": "1.5rem", "margin-mobile": "1rem", "margin": "2.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-md": "1rem", "gutter-mobile": "1rem", "space-sm": "0.5rem" }, "fontFamily": { "kpi-stat": [ "Space Grotesk" ], "headline-xl": [ "Space Grotesk" ], "headline-sm": [ "Space Grotesk" ], "headline-md": [ "Space Grotesk" ], "headline-lg": [ "Space Grotesk" ], "label-sm": [ "JetBrains Mono" ], "body-lg": [ "Geist" ], "label-md": [ "JetBrains Mono" ], "body-md": [ "Geist" ], "headline-lg-mobile": [ "Space Grotesk" ], "body-sm": [ "Geist" ], "headline-xl-mobile": [ "Space Grotesk" ] }, "fontSize": { "kpi-stat": [ "36px", { "lineHeight": "44px", "fontWeight": "700" } ], "headline-xl": [ "40px", { "lineHeight": "48px", "fontWeight": "600" } ], "headline-sm": [ "18px", { "lineHeight": "26px", "fontWeight": "500" } ], "headline-md": [ "22px", { "lineHeight": "30px", "fontWeight": "500" } ], "headline-lg": [ "30px", { "lineHeight": "38px", "fontWeight": "600" } ], "label-sm": [ "11px", { "lineHeight": "16px", "fontWeight": "500" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "label-md": [ "13px", { "lineHeight": "18px", "fontWeight": "500" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ], "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "fontWeight": "600" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "headline-xl-mobile": [ "28px", { "lineHeight": "36px", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-low z-50 flex flex-col justify-between py-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col gap-space-lg"><div class="px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 rounded bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-on-primary-container text-[18px]">sports_and_outdoors</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface font-bold">ATHLETE<span class="text-primary">IQ</span></span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">AI Biometrics</span></div></div><div class="px-space-xs py-0.5 rounded bg-surface-container-high text-primary font-label-sm text-label-sm">v2.4</div></div><nav class="flex flex-col gap-1 px-space-md" data-active-classes="bg-secondary-container text-on-surface font-medium"><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg transition-colors bg-secondary-container text-on-surface font-medium" data-path="overview" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="font-body-md text-body-md">Overview</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="athletes" href="#"><span class="material-symbols-outlined text-[20px]">groups</span><span class="font-body-md text-body-md">Athletes</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="injury-prediction" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[20px]">vital_signs</span><span class="font-body-md text-body-md">Injury Prediction</span></div><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-highest text-primary">ML MODEL</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="performance-analytics" href="#"><span class="material-symbols-outlined text-[20px]">analytics</span><span class="font-body-md text-body-md">Performance Analytics</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="model-insights" href="#"><span class="material-symbols-outlined text-[20px]">model_training</span><span class="font-body-md text-body-md">Model Insights</span></a></nav></div><div class="px-space-md"><div class="p-space-md rounded-xl bg-surface-container flex flex-col gap-space-xs"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">PyTorch Inference</span><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span><span class="font-label-sm text-label-sm text-primary">Online</span></div></div><div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>Latency: 14ms</span><span>Sync: 99.8%</span></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant text-body-sm font-body-sm"><span class="material-symbols-outlined text-[16px] text-primary">memory</span><span>Production Model v2.4 (Transformer + Focal Loss)</span></div></div><div class="flex items-center gap-space-md"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[18px]">search</span><input class="w-64 pl-9 pr-space-md py-1.5 bg-surface-container-low rounded-lg text-body-sm font-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Search athlete, bio-metric ID..." type="text"/></div><button aria-label="Notifications" class="p-2 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span></button><div class="flex items-center gap-space-sm pl-space-sm"><div class="flex flex-col text-right hidden sm:flex"><span class="font-body-sm text-body-sm text-on-surface font-medium leading-none">Dr. Marcus Vance</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none mt-1">Head of Sports Science</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="w-full pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<div class="px-space-xl py-space-xl flex flex-col gap-space-xl max-w-[1600px] mx-auto w-full">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs max-w-3xl">
+<div class="flex items-center gap-space-xs text-primary font-label-sm text-label-sm uppercase tracking-widest">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span>Live Surveillance Engine</span>
+<span class="text-outline">/</span>
+<span class="text-on-surface-variant font-mono">Cohort α-24</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl tracking-tight text-on-surface">Squad Biometric Overview</h1>
+<p class="font-body-lg text-body-lg text-secondary">
+          Real-time population monitoring &amp; soft-tissue injury risk distribution across 24 monitored athletes.
+        </p>
+</div>
+<div class="flex items-center gap-space-md shrink-0">
+<div class="hidden lg:flex flex-col text-right pr-space-md py-1">
+<span class="font-label-sm text-label-sm text-secondary uppercase">Last Synced Batch</span>
+<span class="font-label-md text-label-md text-on-surface font-mono">08:42:19 UTC</span>
+</div>
+<button class="flex items-center gap-space-sm px-space-lg py-3 rounded bg-primary text-on-primary font-headline-sm text-body-md font-semibold hover:bg-primary-container active:scale-[0.99] transition-all shadow-md" id="btn-run-inference" onclick="runInferenceSimulation()">
+<span class="material-symbols-outlined text-[18px]" id="infer-icon">bolt</span>
+<span id="infer-text">Run Squad Inference</span>
+</button>
+</div>
+</div>
+<!-- KPI Summary Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-gutter">
+<!-- Card 1: Monitored Squad -->
+<div class="bg-surface-container-low rounded-lg p-space-lg shadow-sm flex flex-col justify-between min-h-[140px]">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Monitored Squad</span>
+<span class="material-symbols-outlined text-[18px] text-secondary">group</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-kpi-stat text-kpi-stat text-on-surface tracking-tight">24</span>
+<span class="font-headline-sm text-headline-sm text-secondary">Athletes</span>
+</div>
+<div class="flex items-center gap-space-xs text-body-sm font-body-sm text-secondary">
+<span>14 Football</span>
+<span class="text-outline">·</span>
+<span>10 Cricket</span>
+</div>
+</div>
+</div>
+<!-- Card 2: Low Risk (Cleared) -->
+<div class="bg-surface-container-low rounded-lg p-space-lg shadow-sm flex flex-col justify-between min-h-[140px] relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-primary/5 blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Low Risk (Cleared)</span>
+<div class="w-2.5 h-2.5 rounded-full bg-primary shadow-sm"></div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-baseline gap-space-sm">
+<span class="font-kpi-stat text-kpi-stat text-on-surface tracking-tight">16</span>
+<span class="font-label-md text-label-md text-primary font-mono bg-surface-container px-2 py-0.5 rounded">66.7% of squad</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary">Optimal physiological reserve</span>
+</div>
+</div>
+<!-- Card 3: Moderate Risk (Monitor) -->
+<div class="bg-surface-container-low rounded-lg p-space-lg shadow-sm flex flex-col justify-between min-h-[140px] relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-secondary/5 blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Moderate Risk</span>
+<div class="w-2.5 h-2.5 rounded-full bg-secondary-fixed-dim shadow-sm"></div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-baseline gap-space-sm">
+<span class="font-kpi-stat text-kpi-stat text-on-surface tracking-tight">5</span>
+<span class="font-label-md text-label-md text-secondary-fixed-dim font-mono bg-surface-container px-2 py-0.5 rounded">20.8% of squad</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary">Restricted plyometric loads</span>
+</div>
+</div>
+<!-- Card 4: High / Elevated (Attention Required) -->
+<div class="bg-surface-container-low rounded-lg p-space-lg shadow-sm flex flex-col justify-between min-h-[140px] relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-error/10 blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-error uppercase tracking-wider">High / Elevated</span>
+<div class="w-2.5 h-2.5 rounded-full bg-error shadow-sm"></div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-baseline gap-space-sm">
+<span class="font-kpi-stat text-kpi-stat text-on-surface tracking-tight">3</span>
+<span class="font-label-md text-label-md text-error font-mono bg-error-container/40 px-2 py-0.5 rounded text-error">12.5% of squad</span>
+</div>
+<div class="flex items-center gap-1 font-body-sm text-body-sm text-error">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+<span>+1 vs yesterday</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Balanced Main Visual Cards (50/50 split) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter items-stretch">
+<!-- Left Card: 14-Day Squad Risk Trend -->
+<div class="bg-surface-container-low rounded-lg p-space-lg flex flex-col justify-between shadow-sm">
+<div class="flex flex-col gap-space-xs mb-space-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-on-surface">14-Day Squad Risk Trend</h2>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-secondary font-mono">Current Squad Avg:</span>
+<span class="font-label-md text-label-md font-mono text-primary font-bold">22.4%</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">
+            Continuous cohort probability index across acute kinematic telemetry.
+          </p>
+</div>
+<!-- SVG Line Chart Area -->
+<div class="w-full relative h-64 flex flex-col justify-end">
+<!-- Background Bands -->
+<div class="absolute inset-0 flex flex-col pointer-events-none">
+<!-- High risk band (> 50%) -->
+<div class="h-1/2 w-full flex items-start justify-end pr-2 pt-1 border-b border-surface-container-highest/60">
+<span class="font-label-sm text-label-sm text-error/60 font-mono tracking-wide">High Risk (&gt;50%)</span>
+</div>
+<!-- Moderate risk band (30% - 50%) -->
+<div class="h-1/4 w-full flex items-start justify-end pr-2 pt-1 border-b border-surface-container-highest/60">
+<span class="font-label-sm text-label-sm text-secondary-fixed-dim/60 font-mono tracking-wide">Moderate (30-50%)</span>
+</div>
+<!-- Low risk band (< 30%) -->
+<div class="h-1/4 w-full flex items-end justify-end pr-2 pb-1">
+<span class="font-label-sm text-label-sm text-primary/50 font-mono tracking-wide">Cleared Zone (&lt;30%)</span>
+</div>
+</div>
+<!-- Dynamic SVG Canvas -->
+<svg class="w-full h-full overflow-visible z-10" preserveaspectratio="none" viewbox="0 0 560 220">
+<defs>
+<lineargradient id="trendGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#10e760" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#10e760" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid horizontal dotted guidelines -->
+<line stroke="#242a37" stroke-dasharray="3 3" stroke-width="1" x1="0" x2="560" y1="55" y2="55"></line>
+<line stroke="#242a37" stroke-dasharray="3 3" stroke-width="1" x1="0" x2="560" y1="110" y2="110"></line>
+<line stroke="#242a37" stroke-dasharray="3 3" stroke-width="1" x1="0" x2="560" y1="165" y2="165"></line>
+<!-- Area Fill -->
+<polygon fill="url(#trendGradient)" points="0,172 43,168 86,164 129,170 172,158 215,152 258,155 301,148 344,142 387,150 430,138 473,144 516,132 560,135 560,215 0,215"></polygon>
+<!-- Smooth Trend Line -->
+<polyline fill="none" points="0,172 43,168 86,164 129,170 172,158 215,152 258,155 301,148 344,142 387,150 430,138 473,144 516,132 560,135" stroke="#10e760" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></polyline>
+<!-- Active Data Node at day 14 -->
+<circle class="animate-pulse" cx="560" cy="135" fill="#10e760" r="4.5"></circle>
+<circle cx="560" cy="135" fill="#10e760" opacity="0.25" r="8"></circle>
+</svg>
+<!-- Day Labels Axis -->
+<div class="flex justify-between items-center w-full pt-space-xs text-secondary font-label-sm text-label-sm border-t border-surface-container-high z-10">
+<span>D-14</span>
+<span>D-11</span>
+<span>D-8</span>
+<span>D-5</span>
+<span>D-2</span>
+<span class="text-primary font-bold">Today</span>
+</div>
+</div>
+<!-- Legend and Meta -->
+<div class="flex items-center justify-between pt-space-md mt-space-sm border-t border-surface-container-high/40">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-2">
+<span class="w-3 h-0.5 bg-primary"></span>
+<span class="font-label-sm text-label-sm text-secondary">Mean Injury Probability</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-label-sm text-label-sm text-secondary">Threshold (50%)</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">Confidence: 94.2%</span>
+</div>
+</div>
+<!-- Right Card: Risk Distribution by Sport -->
+<div class="bg-surface-container-low rounded-lg p-space-lg flex flex-col justify-between shadow-sm">
+<div class="flex flex-col gap-space-xs mb-space-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-on-surface">Risk Distribution by Sport</h2>
+<span class="font-label-sm text-label-sm text-secondary font-mono">2 Distinct Disciplines</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">
+            Comparative breakdown showing athlete count categorised by model-assigned risk tier.
+          </p>
+</div>
+<!-- Segmented Stacked Comparison -->
+<div class="flex flex-col gap-space-lg my-auto py-space-sm">
+<!-- Football Stack -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">sports_soccer</span>
+<span class="font-headline-sm text-body-lg text-on-surface font-semibold">Football</span>
+<span class="font-label-sm text-label-sm text-secondary font-mono">(14 athletes)</span>
+</div>
+<div class="flex items-center gap-space-sm font-label-sm text-label-sm font-mono">
+<span class="text-primary">10 Low</span>
+<span class="text-outline">·</span>
+<span class="text-secondary-fixed-dim">3 Mod</span>
+<span class="text-outline">·</span>
+<span class="text-error font-bold">1 High</span>
+</div>
+</div>
+<!-- Segmented Progress Bar -->
+<div class="h-6 w-full bg-surface-container rounded flex overflow-hidden p-0.5 gap-0.5">
+<!-- Low: 10/14 = 71.4% -->
+<div class="h-full bg-primary/80 hover:bg-primary transition-colors rounded-sm flex items-center justify-center" style="width: 71.4%;">
+<span class="font-label-sm text-label-sm text-on-primary font-bold">71%</span>
+</div>
+<!-- Moderate: 3/14 = 21.4% -->
+<div class="h-full bg-secondary-fixed-dim/70 hover:bg-secondary-fixed-dim transition-colors rounded-sm flex items-center justify-center" style="width: 21.4%;">
+<span class="font-label-sm text-label-sm text-surface font-bold">21%</span>
+</div>
+<!-- High: 1/14 = 7.1% -->
+<div class="h-full bg-error hover:bg-error-container transition-colors rounded-sm flex items-center justify-center" style="width: 7.1%;">
+<span class="font-label-sm text-label-sm text-on-surface font-bold">1</span>
+</div>
+</div>
+</div>
+<!-- Cricket Stack -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">sports_cricket</span>
+<span class="font-headline-sm text-body-lg text-on-surface font-semibold">Cricket</span>
+<span class="font-label-sm text-label-sm text-secondary font-mono">(10 athletes)</span>
+</div>
+<div class="flex items-center gap-space-sm font-label-sm text-label-sm font-mono">
+<span class="text-primary">6 Low</span>
+<span class="text-outline">·</span>
+<span class="text-secondary-fixed-dim">2 Mod</span>
+<span class="text-outline">·</span>
+<span class="text-error font-bold">2 High</span>
+</div>
+</div>
+<!-- Segmented Progress Bar -->
+<div class="h-6 w-full bg-surface-container rounded flex overflow-hidden p-0.5 gap-0.5">
+<!-- Low: 6/10 = 60.0% -->
+<div class="h-full bg-primary/80 hover:bg-primary transition-colors rounded-sm flex items-center justify-center" style="width: 60.0%;">
+<span class="font-label-sm text-label-sm text-on-primary font-bold">60%</span>
+</div>
+<!-- Moderate: 2/10 = 20.0% -->
+<div class="h-full bg-secondary-fixed-dim/70 hover:bg-secondary-fixed-dim transition-colors rounded-sm flex items-center justify-center" style="width: 20.0%;">
+<span class="font-label-sm text-label-sm text-surface font-bold">20%</span>
+</div>
+<!-- High: 2/10 = 20.0% -->
+<div class="h-full bg-error hover:bg-error-container transition-colors rounded-sm flex items-center justify-center" style="width: 20.0%;">
+<span class="font-label-sm text-label-sm text-on-surface font-bold">20%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Legend -->
+<div class="flex items-center justify-between pt-space-md border-t border-surface-container-high/40">
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-sm bg-primary"></span>
+<span class="font-label-sm text-label-sm text-secondary">Low (Optimal)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-sm bg-secondary-fixed-dim"></span>
+<span class="font-label-sm text-label-sm text-secondary">Moderate (Regulate)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-sm bg-error"></span>
+<span class="font-label-sm text-label-sm text-secondary">High (De-load)</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-mono">Sample N=24</span>
+</div>
+</div>
+</div>
+<!-- Priority Attention Athletes Section -->
+<div class="bg-surface-container-low rounded-lg p-space-lg shadow-sm flex flex-col gap-space-lg">
+<!-- Section Title & Context -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pb-space-sm border-b border-surface-container-high">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Priority Attention Athletes</h2>
+</div>
+<p class="font-body-sm text-body-sm text-secondary">
+            Athletes exceeding critical Acute:Chronic Workload Ratio (ACWR) thresholds or flagged by focal loss risk inference.
+          </p>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary font-mono">Filter by:</span>
+<span class="font-label-sm text-label-sm px-2 py-1 bg-surface-container rounded text-on-surface font-mono">Highest Risk First</span>
+</div>
+</div>
+<!-- Elegant Uncluttered Table -->
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-secondary font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-space-md font-semibold">Athlete Name</th>
+<th class="py-3 px-space-md font-semibold">Sport &amp; Position</th>
+<th class="py-3 px-space-md font-semibold text-right">Workload (ACWR)</th>
+<th class="py-3 px-space-md font-semibold text-right">Model Injury Probability</th>
+<th class="py-3 px-space-md font-semibold text-center">Risk Classification</th>
+<th class="py-3 px-space-md font-semibold text-right">Action</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md divide-y divide-surface-container-high/40">
+<!-- Row 1: Jofra Archer -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-4 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close up athletic portrait of a male professional cricket fast bowler looking focused under cinematic studio light against a clean dark charcoal backdrop." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIqY7eVqp7zyzVAv25zPlkziE2A1nUdY1L0GVv4WvP9qCEyCG4-16wIpwre0Yr09qF1Bu08PC8DlEqL0offRRJnju5NWYjdEGBesv6ny316JtCjJoGrrAjpjQnyJaY0-czhZrsFHDepZ3NtLnbFzjFuNXTcJPAU216XjTgbyN95NjTSm5OxQ4mJqF72v3DxYuRqa_p7hVMOa230SUxpAacshtYTimWJpNWHd0q6Cg"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Jofra Archer</span>
+<span class="font-label-sm text-label-sm text-secondary font-mono">ID: CRK-0492</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="text-on-surface font-medium">Cricket</span>
+<span class="font-body-sm text-body-sm text-secondary">Fast Bowler (Spike Loading)</span>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap text-right">
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md font-mono text-error font-bold">1.82</span>
+<span class="font-label-sm text-label-sm text-error/80 font-mono">High Danger Zone (&gt;1.5)</span>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap text-right">
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md font-mono text-error font-bold">78.4%</span>
+<div class="w-24 h-1.5 bg-surface-container rounded-full overflow-hidden mt-1">
+<div class="h-full bg-error rounded-full" style="width: 78.4%;"></div>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded font-label-sm text-label-sm font-mono font-semibold bg-error-container/30 text-error">
+                  High Risk
+                </span>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap text-right">
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary hover:text-primary-container font-semibold transition-colors" data-path="model-insights" href="#">
+<span>Analyze in Model</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</td>
+</tr>
+<!-- Row 2: Marcus Sterling -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-4 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Editorial portrait of a high-performance professional soccer winger in training attire with intense gaze in moody dark ambient lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8zjaSD4hPLv8JLKPOsY2cGfb8cKl6rbyToRgl_go0ez5wsV7lAx3kwQjRmaT9NUqHOOBN6pH1LGYDjUgmZuKrUpIYXckNKecVDaNRkp3Aw92m1Po4xbeH1P9WDsel1OlVOZMssJnb9VrvzmSZymRzHx5zDe5znWj2WNdGrfbMdqJs9PZ5hgYflE3SrqVS54XntgA8Ayd1ivY6bNq7E7ArHOkZ3Z9vwopLDU4T8RI"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Marcus Sterling</span>
+<span class="font-label-sm text-label-sm text-secondary font-mono">ID: FBL-0118</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="text-on-surface font-medium">Football</span>
+<span class="font-body-sm text-body-sm text-secondary">Winger (Sprint Accumulation)</span>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap text-right">
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md font-mono text-secondary-fixed-dim font-bold">1.68</span>
+<span class="font-label-sm text-label-sm text-secondary font-mono">Elevated (&gt;1.5)</span>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap text-right">
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md font-mono text-secondary-fixed-dim font-bold">54.2%</span>
+<div class="w-24 h-1.5 bg-surface-container rounded-full overflow-hidden mt-1">
+<div class="h-full bg-secondary-fixed-dim rounded-full" style="width: 54.2%;"></div>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded font-label-sm text-label-sm font-mono font-semibold bg-surface-container-high text-secondary-fixed-dim">
+                  Elevated
+                </span>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap text-right">
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary hover:text-primary-container font-semibold transition-colors" data-path="model-insights" href="#">
+<span>Analyze in Model</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</td>
+</tr>
+<!-- Row 3: Rashid Khan -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-4 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Athletic studio portrait of an elite cricket leg spin bowler with a focused determined expression illuminated by clean directional rim light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApd5WPQdmfQ-O9mexWs6HQ9CyvE_Z6yTqqkSAvfKBSGa7sgAeaxzzYTLtYXVZcRPJf-5edlIf0bQrhoNCv0eArSh3aGkMmNqb6hVnNTkXPOpI7s13qzCgCsLR9khFq7j0JWQ0PluT7YYp2xq7iwl2NZC4wvTY656okSa3-Tl0Nr4g4mPbJLIfV2HsxkxVImDq0IhDMdpmO9EKUboNOWb_yxiBQZ9HrHAIx0TUqZOg"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Rashid Khan</span>
+<span class="font-label-sm text-label-sm text-secondary font-mono">ID: CRK-0312</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="text-on-surface font-medium">Cricket</span>
+<span class="font-body-sm text-body-sm text-secondary">Spinner (Rotational Torque)</span>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap text-right">
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md font-mono text-on-surface font-medium">1.45</span>
+<span class="font-label-sm text-label-sm text-secondary font-mono">Acceptable Limit</span>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap text-right">
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md font-mono text-on-surface font-medium">48.0%</span>
+<div class="w-24 h-1.5 bg-surface-container rounded-full overflow-hidden mt-1">
+<div class="h-full bg-secondary-fixed-dim/60 rounded-full" style="width: 48.0%;"></div>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded font-label-sm text-label-sm font-mono font-medium bg-surface-container text-secondary">
+                  Moderate
+                </span>
+</td>
+<td class="py-4 px-space-md whitespace-nowrap text-right">
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary hover:text-primary-container font-semibold transition-colors" data-path="model-insights" href="#">
+<span>Analyze in Model</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Clear Calm Footer Note -->
+<div class="flex flex-col sm:flex-row items-center justify-between pt-space-md border-t border-surface-container-high/40 text-secondary font-label-sm text-label-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">verified_user</span>
+<span>All predictions generated via PyTorch Transformer Encoder v2.4 (Simulated Demo Data).</span>
+</div>
+<div class="flex items-center gap-space-md mt-space-xs sm:mt-0 font-mono">
+<span>Loss Function: Focal Loss (γ=2.0)</span>
+<span class="text-outline">·</span>
+<span>Window: 28-day exponential decay</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function runInferenceSimulation() {
+    const btn = document.getElementById('btn-run-inference');
+    const text = document.getElementById('infer-text');
+    const icon = document.getElementById('infer-icon');
+    
+    if (!btn || !text || !icon) return;
+
+    btn.disabled = true;
+    icon.classList.add('animate-spin');
+    icon.textContent = 'autorenew';
+    text.textContent = 'Calculating Matrix...';
+
+    setTimeout(() => {
+      icon.classList.remove('animate-spin');
+      icon.textContent = 'check';
+      text.textContent = 'Inference Synchronized';
+      btn.classList.add('bg-primary-container', 'text-on-primary-container');
+
+      setTimeout(() => {
+        icon.textContent = 'bolt';
+        text.textContent = 'Run Squad Inference';
+        btn.disabled = false;
+        btn.classList.remove('bg-primary-container', 'text-on-primary-container');
+      }, 2500);
+    }, 1200);
+  }
+</script></main></div></body></html>

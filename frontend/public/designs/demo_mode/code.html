@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ATHLETEIQ – Live Model Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  ::-webkit-scrollbar{display:none;}
+  body{background:#0d131f;color:#dde2f4;font-family:'Geist',sans-serif;min-height:100vh;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .grotesk{font-family:'Space Grotesk',sans-serif;}
+
+  /* Slider styling */
+  input[type=range]{
+    -webkit-appearance:none; width:100%; height:6px;
+    border-radius:3px; outline:none; cursor:pointer;
+    background: linear-gradient(to right, #10e760 0%, #10e760 50%, #2f3542 50%, #2f3542 100%);
+    transition: background 0.1s;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:18px; height:18px; border-radius:50%;
+    background:#7fff91; border:2px solid #0d131f; cursor:pointer;
+    box-shadow: 0 0 8px rgba(127,255,145,0.5);
+  }
+  input[type=range].danger{background: linear-gradient(to right, #ffb4ab 0%, #ffb4ab 50%, #2f3542 50%, #2f3542 100%);}
+  input[type=range].danger::-webkit-slider-thumb{background:#ffb4ab; box-shadow:0 0 8px rgba(255,180,171,0.5);}
+
+  /* Gauge */
+  .gauge-track{fill:none; stroke:#2f3542; stroke-width:10;}
+  .gauge-fill{fill:none; stroke-width:10; stroke-linecap:round;
+    stroke-dasharray:314.159; transition:stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1), stroke 0.4s;}
+
+  /* Cards */
+  .card{background:#161c28; border-radius:12px; border:1px solid #242a37;}
+  .card-high{border-color:rgba(255,180,171,0.3); background:rgba(147,0,10,0.08);}
+  .card-low{border-color:rgba(16,231,96,0.3); background:rgba(0,97,35,0.08);}
+
+  /* Preset buttons */
+  .preset-btn{
+    padding:10px 18px; border-radius:8px; border:1px solid #2f3542;
+    background:#1a202c; color:#bacbb7; font-family:'JetBrains Mono',monospace;
+    font-size:12px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:8px;
+  }
+  .preset-btn:hover{border-color:#7fff91; color:#dde2f4; background:#1a202c;}
+  .preset-btn.active-high{border-color:#ffb4ab; color:#ffb4ab; background:rgba(147,0,10,0.15);}
+  .preset-btn.active-low{border-color:#7fff91; color:#7fff91; background:rgba(0,97,35,0.15);}
+
+  /* Run button */
+  .run-btn{
+    width:100%; padding:16px; border-radius:10px; border:none;
+    background:#7fff91; color:#003911; font-family:'Space Grotesk',sans-serif;
+    font-size:17px; font-weight:700; cursor:pointer; transition:all 0.2s;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    box-shadow: 0 0 20px rgba(127,255,145,0.25);
+  }
+  .run-btn:hover{background:#04e55e; box-shadow:0 0 32px rgba(4,229,94,0.4);}
+  .run-btn:disabled{opacity:0.6; cursor:wait;}
+  .run-btn.danger-state{background:#ffb4ab; color:#690005; box-shadow:0 0 20px rgba(255,180,171,0.3);}
+
+  /* Risk badge */
+  .badge{display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:999px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase;}
+  .badge-low{background:rgba(0,97,35,0.2); color:#7fff91; border:1px solid rgba(127,255,145,0.3);}
+  .badge-moderate{background:rgba(100,80,0,0.2); color:#ffd700; border:1px solid rgba(255,215,0,0.3);}
+  .badge-elevated{background:rgba(100,50,0,0.2); color:#ffa040; border:1px solid rgba(255,160,64,0.3);}
+  .badge-high{background:rgba(147,0,10,0.2); color:#ffb4ab; border:1px solid rgba(255,180,171,0.3);}
+
+  /* Attention bar */
+  .attn-bar{height:6px; border-radius:3px; background:#10e760; transition:width 0.4s, background 0.3s;}
+
+  /* Nav */
+  .nav-link{display:flex; align-items:center; gap:12px; padding:10px 16px; border-radius:8px; color:#bacbb7; text-decoration:none; font-size:14px; transition:all 0.2s;}
+  .nav-link:hover{background:#1a202c; color:#dde2f4;}
+  .nav-link.active{background:#3a4967; color:#dde2f4; font-weight:500;}
+
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .spin{animation:spin 1s linear infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+  .pulse{animation:pulse 2s ease-in-out infinite;}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside style="position:fixed;left:0;top:0;width:288px;height:100%;background:#161c28;border-right:1px solid #242a37;display:flex;flex-direction:column;justify-content:space-between;padding:24px 16px;z-index:50;">
+  <div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px;padding:0 8px;">
+      <div style="width:28px;height:28px;border-radius:6px;background:#10e760;display:flex;align-items:center;justify-content:center;">
+        <span class="material-symbols-outlined" style="font-size:18px;color:#003911;">sports_and_outdoors</span>
+      </div>
+      <div>
+        <div class="grotesk" style="font-size:17px;font-weight:700;color:#dde2f4;">ATHLETE<span style="color:#7fff91;">IQ</span></div>
+        <div class="mono" style="font-size:10px;color:#bacbb7;letter-spacing:0.08em;text-transform:uppercase;">AI Biometrics</div>
+      </div>
+      <div class="mono" style="margin-left:auto;font-size:10px;padding:2px 7px;border-radius:4px;background:#242a37;color:#7fff91;">v2.4</div>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:4px;">
+      <a class="nav-link" data-path="overview" href="/">
+        <span class="material-symbols-outlined" style="font-size:20px;">grid_view</span>Overview
+      </a>
+      <a class="nav-link" data-path="athletes" href="/athletes">
+        <span class="material-symbols-outlined" style="font-size:20px;">groups</span>Athletes
+      </a>
+      <a class="nav-link" data-path="injury-prediction" href="/prediction">
+        <span class="material-symbols-outlined" style="font-size:20px;">vital_signs</span>Injury Prediction
+        <span class="mono" style="margin-left:auto;font-size:10px;padding:2px 6px;border-radius:4px;background:#242a37;color:#7fff91;">ML</span>
+      </a>
+      <a class="nav-link active" data-path="demo" href="/demo">
+        <span class="material-symbols-outlined" style="font-size:20px;">science</span>Live Demo
+        <span class="mono" style="margin-left:auto;font-size:10px;padding:2px 6px;border-radius:4px;background:#3a4967;color:#dde4fe;">PRESENT</span>
+      </a>
+      <a class="nav-link" data-path="performance-analytics" href="/analytics">
+        <span class="material-symbols-outlined" style="font-size:20px;">analytics</span>Analytics
+      </a>
+      <a class="nav-link" data-path="model-insights" href="/insights">
+        <span class="material-symbols-outlined" style="font-size:20px;">model_training</span>Model Insights
+      </a>
+    </nav>
+  </div>
+
+  <div style="padding:12px;border-radius:10px;background:#1a202c;border:1px solid #242a37;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <span class="mono" style="font-size:10px;color:#bacbb7;text-transform:uppercase;letter-spacing:0.08em;">PyTorch Inference</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="pulse" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#10e760;"></span>
+        <span class="mono" style="font-size:11px;color:#7fff91;" id="backend-status">Checking...</span>
+      </div>
+    </div>
+    <div class="mono" style="font-size:10px;color:#bacbb7;">ROC-AUC: <span style="color:#7fff91;">0.9191</span> · Transformer-Focal</div>
+  </div>
+</aside>
+
+<!-- Main -->
+<div style="padding-left:288px;min-height:100vh;">
+
+  <!-- Header -->
+  <header style="position:sticky;top:0;background:rgba(13,19,31,0.9);backdrop-filter:blur(16px);border-bottom:1px solid #242a37;padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;z-index:40;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="material-symbols-outlined" style="color:#7fff91;font-size:20px;">science</span>
+      <span class="grotesk" style="font-size:17px;font-weight:600;color:#dde2f4;">Live Model Demo</span>
+      <span class="mono" style="font-size:11px;padding:3px 10px;border-radius:4px;background:#3a4967;color:#dde4fe;">PRESENTATION MODE</span>
+    </div>
+    <div class="mono" style="font-size:11px;color:#bacbb7;" id="last-run-time">Model not yet queried</div>
+  </header>
+
+  <main style="padding:28px 32px;max-width:1400px;">
+
+    <!-- Intro Banner -->
+    <div style="margin-bottom:24px;padding:18px 24px;border-radius:12px;background:linear-gradient(135deg,rgba(16,231,96,0.06),rgba(13,19,31,0));border:1px solid rgba(127,255,145,0.15);display:flex;align-items:center;gap:16px;">
+      <span class="material-symbols-outlined" style="font-size:32px;color:#7fff91;">batch_prediction</span>
+      <div>
+        <div class="grotesk" style="font-size:19px;font-weight:600;color:#dde2f4;">Adjust any slider → click Run → watch the Transformer respond</div>
+        <div style="font-size:13px;color:#bacbb7;margin-top:3px;">This calls your trained <strong style="color:#7fff91;">best_model.pt</strong> (ROC-AUC 0.9191) in real time. No mock data — the numbers are real model outputs.</div>
+      </div>
+    </div>
+
+    <!-- Preset Scenarios -->
+    <div style="margin-bottom:24px;">
+      <div class="mono" style="font-size:11px;color:#bacbb7;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Quick Scenarios — click to load preset values</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button class="preset-btn" onclick="loadPreset('healthy')" id="preset-healthy">
+          <span class="material-symbols-outlined" style="font-size:16px;">check_circle</span>✅ Healthy Athlete (Low Risk)
+        </button>
+        <button class="preset-btn" onclick="loadPreset('moderate')" id="preset-moderate">
+          <span class="material-symbols-outlined" style="font-size:16px;">warning</span>⚠️ Overloaded (Moderate)
+        </button>
+        <button class="preset-btn" onclick="loadPreset('high')" id="preset-high">
+          <span class="material-symbols-outlined" style="font-size:16px;">emergency</span>🔴 Injury Risk (High)
+        </button>
+        <button class="preset-btn" onclick="loadPreset('sleep')" id="preset-sleep">
+          <span class="material-symbols-outlined" style="font-size:16px;">bedtime</span>😴 Sleep Deprived
+        </button>
+        <button class="preset-btn" onclick="loadPreset('returning')" id="preset-returning">
+          <span class="material-symbols-outlined" style="font-size:16px;">healing</span>🩹 Returning from Injury
+        </button>
+      </div>
+    </div>
+
+    <!-- Main 3-column layout -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 380px;gap:20px;align-items:start;">
+
+      <!-- Col 1: Workload & Training -->
+      <div class="card" style="padding:24px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #242a37;">
+          <div style="width:30px;height:30px;border-radius:7px;background:#1a202c;display:flex;align-items:center;justify-content:center;">
+            <span class="material-symbols-outlined" style="font-size:18px;color:#7fff91;">speed</span>
+          </div>
+          <div>
+            <div class="grotesk" style="font-size:15px;font-weight:600;color:#dde2f4;">Training Load</div>
+            <div class="mono" style="font-size:10px;color:#bacbb7;">CATAPULT GNSS · MATCH LOAD</div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:22px;">
+          <!-- Session RPE -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <label style="font-size:13px;color:#bacbb7;">Session RPE <span style="font-size:11px;color:#bacbb7;">(Rate of Perceived Exertion)</span></label>
+              <span class="mono" style="font-size:14px;font-weight:600;color:#dde2f4;" id="val-rpe">6.0 / 10</span>
+            </div>
+            <input type="range" id="sl-rpe" min="1" max="10" step="0.1" value="6.0" oninput="updateSlider('rpe',this.value)"/>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#bacbb7;margin-top:3px;" class="mono">
+              <span>1 Easy</span><span style="color:#ffd700;">7 Hard</span><span style="color:#ffb4ab;">10 Max</span>
+            </div>
+          </div>
+
+          <!-- Daily Load -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <label style="font-size:13px;color:#bacbb7;">Daily Session Load <span style="font-size:11px;">(AU)</span></label>
+              <span class="mono" style="font-size:14px;font-weight:600;color:#dde2f4;" id="val-daily_load">480 AU</span>
+            </div>
+            <input type="range" id="sl-daily_load" min="50" max="1200" step="10" value="480" oninput="updateSlider('daily_load',this.value)"/>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#bacbb7;margin-top:3px;" class="mono">
+              <span>50 Rest</span><span>480 Normal</span><span style="color:#ffb4ab;">1200 Extreme</span>
+            </div>
+          </div>
+
+          <!-- Weekly Load -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <label style="font-size:13px;color:#bacbb7;">Weekly Accumulated Load <span style="font-size:11px;">(AU)</span></label>
+              <span class="mono" style="font-size:14px;font-weight:600;color:#dde2f4;" id="val-weekly_load">2800 AU</span>
+            </div>
+            <input type="range" id="sl-weekly_load" min="200" max="7000" step="50" value="2800" oninput="updateSlider('weekly_load',this.value)"/>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#bacbb7;margin-top:3px;" class="mono">
+              <span>200 Rest week</span><span style="color:#ffd700;">4000 Heavy</span><span style="color:#ffb4ab;">7000 Pre-match</span>
+            </div>
+          </div>
+
+          <!-- Total Distance -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <label style="font-size:13px;color:#bacbb7;">Total GPS Distance <span style="font-size:11px;">(m)</span></label>
+              <span class="mono" style="font-size:14px;font-weight:600;color:#dde2f4;" id="val-total_distance_m">8500 m</span>
+            </div>
+            <input type="range" id="sl-total_distance_m" min="0" max="14000" step="100" value="8500" oninput="updateSlider('total_distance_m',this.value)"/>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#bacbb7;margin-top:3px;" class="mono">
+              <span>0 Rest</span><span>8500 Training</span><span style="color:#ffb4ab;">14000 Match</span>
+            </div>
+          </div>
+
+          <!-- Sprint Distance -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <label style="font-size:13px;color:#bacbb7;">Sprint Distance <span style="font-size:11px;">(&gt;25.2 km/h)</span></label>
+              <span class="mono" style="font-size:14px;font-weight:600;color:#dde2f4;" id="val-sprint_distance_m">600 m</span>
+            </div>
+            <input type="range" id="sl-sprint_distance_m" min="0" max="2500" step="25" value="600" oninput="updateSlider('sprint_distance_m',this.value)"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Col 2: Wellness & Recovery -->
+      <div class="card" style="padding:24px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #242a37;">
+          <div style="width:30px;height:30px;border-radius:7px;background:#1a202c;display:flex;align-items:center;justify-content:center;">
+            <span class="material-symbols-outlined" style="font-size:18px;color:#7fff91;">favorite</span>
+          </div>
+          <div>
+            <div class="grotesk" style="font-size:15px;font-weight:600;color:#dde2f4;">Wellness & Recovery</div>
+            <div class="mono" style="font-size:10px;color:#bacbb7;">SMARTBASE DAILY LOG · HRV</div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:22px;">
+          <!-- Fatigue -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <label style="font-size:13px;color:#bacbb7;">Subjective Fatigue</label>
+              <span class="mono" style="font-size:14px;font-weight:600;color:#dde2f4;" id="val-fatigue">4.0 / 10</span>
+            </div>
+            <input type="range" id="sl-fatigue" min="0" max="10" step="0.1" value="4.0" oninput="updateSlider('fatigue',this.value)"/>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#bacbb7;margin-top:3px;" class="mono">
+              <span>0 Fresh</span><span style="color:#ffd700;">6 Tired</span><span style="color:#ffb4ab;">10 Exhausted</span>
+            </div>
+          </div>
+
+          <!-- Soreness -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <label style="font-size:13px;color:#bacbb7;">Muscle Soreness</label>
+              <span class="mono" style="font-size:14px;font-weight:600;color:#dde2f4;" id="val-soreness">3.0 / 10</span>
+            </div>
+            <input type="range" id="sl-soreness" min="0" max="10" step="0.1" value="3.0" oninput="updateSlider('soreness',this.value)"/>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#bacbb7;margin-top:3px;" class="mono">
+              <span>0 None</span><span style="color:#ffd700;">5 Moderate</span><span style="color:#ffb4ab;">10 Severe</span>
+            </div>
+          </div>
+
+          <!-- Readiness -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <label style="font-size:13px;color:#bacbb7;">Readiness to Train</label>
+              <span class="mono" style="font-size:14px;font-weight:600;color:#dde2f4;" id="val-readiness">7.0 / 10</span>
+            </div>
+            <input type="range" id="sl-readiness" min="0" max="10" step="0.1" value="7.0" oninput="updateSlider('readiness',this.value)"/>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#bacbb7;margin-top:3px;" class="mono">
+              <span>0 Unfit</span><span style="color:#7fff91;">10 Peak</span>
+            </div>
+          </div>
+
+          <!-- Sleep Duration -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <label style="font-size:13px;color:#bacbb7;">Sleep Duration <span style="font-size:11px;">(hrs)</span></label>
+              <span class="mono" style="font-size:14px;font-weight:600;color:#dde2f4;" id="val-sleep_duration">7.5 hrs</span>
+            </div>
+            <input type="range" id="sl-sleep_duration" min="3" max="10" step="0.1" value="7.5" oninput="updateSlider('sleep_duration',this.value)"/>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#bacbb7;margin-top:3px;" class="mono">
+              <span style="color:#ffb4ab;">3 Severe</span><span style="color:#ffd700;">6 Low</span><span style="color:#7fff91;">9 Optimal</span>
+            </div>
+          </div>
+
+          <!-- Mood -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <label style="font-size:13px;color:#bacbb7;">Mood Score</label>
+              <span class="mono" style="font-size:14px;font-weight:600;color:#dde2f4;" id="val-mood">7.0 / 10</span>
+            </div>
+            <input type="range" id="sl-mood" min="0" max="10" step="0.1" value="7.0" oninput="updateSlider('mood',this.value)"/>
+          </div>
+
+          <!-- Prior Injuries -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <label style="font-size:13px;color:#bacbb7;">Prior Injury History <span style="font-size:11px;">(count)</span></label>
+              <span class="mono" style="font-size:14px;font-weight:600;color:#dde2f4;" id="val-prior_injury_count">0</span>
+            </div>
+            <input type="range" id="sl-prior_injury_count" min="0" max="8" step="1" value="0" oninput="updateSlider('prior_injury_count',this.value)"/>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#bacbb7;margin-top:3px;" class="mono">
+              <span style="color:#7fff91;">0 Clean</span><span style="color:#ffd700;">3 History</span><span style="color:#ffb4ab;">8 Chronic</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Col 3: Gauge + Result -->
+      <div style="display:flex;flex-direction:column;gap:16px;position:sticky;top:76px;">
+
+        <!-- Gauge card -->
+        <div class="card" style="padding:24px;text-align:center;" id="result-card">
+          <div class="mono" style="font-size:10px;color:#bacbb7;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;">TRANSFORMER RISK OUTPUT</div>
+
+          <div style="position:relative;width:200px;height:200px;margin:0 auto 16px;">
+            <svg viewBox="0 0 120 120" width="200" height="200">
+              <circle class="gauge-track" cx="60" cy="60" r="50"/>
+              <circle class="gauge-fill" cx="60" cy="60" r="50" id="gauge-fill"
+                stroke="#7fff91" stroke-dashoffset="314.159" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <div class="grotesk" style="font-size:36px;font-weight:700;line-height:1;" id="gauge-pct">--%</div>
+              <div class="mono" style="font-size:10px;color:#bacbb7;margin-top:3px;">INJURY RISK</div>
+            </div>
+          </div>
+
+          <div id="risk-badge-container" style="margin-bottom:14px;">
+            <span class="badge badge-low" id="risk-badge">▪ AWAITING RUN</span>
+          </div>
+
+          <div style="font-size:12px;color:#bacbb7;line-height:1.5;min-height:48px;" id="recommendation">
+            Click Run to get the model's assessment.
+          </div>
+        </div>
+
+        <!-- Run button -->
+        <button class="run-btn" id="run-btn" onclick="runPrediction()">
+          <span class="material-symbols-outlined" style="font-size:22px;" id="run-icon">bolt</span>
+          <span id="run-label">RUN INJURY RISK PREDICTION</span>
+        </button>
+
+        <!-- Attention heatmap -->
+        <div class="card" style="padding:16px;">
+          <div class="mono" style="font-size:10px;color:#bacbb7;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">TEMPORAL ATTENTION — WHICH DAYS MATTERED MOST</div>
+          <div id="attention-bars" style="display:flex;flex-direction:column;gap:5px;">
+            <div class="mono" style="font-size:11px;color:#bacbb7;text-align:center;padding:16px 0;">Run model to see attention weights</div>
+          </div>
+        </div>
+
+        <!-- Model metadata -->
+        <div class="card" style="padding:14px;">
+          <div style="display:flex;flex-direction:column;gap:6px;" class="mono">
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#bacbb7;">Architecture</span><span style="color:#7fff91;">Transformer Encoder</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#bacbb7;">Loss Function</span><span style="color:#7fff91;">Focal Loss α=0.25 γ=2.0</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#bacbb7;">ROC-AUC</span><span style="color:#7fff91;">0.9191</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#bacbb7;">Input Window</span><span style="color:#7fff91;">14 Days × 22 Features</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:#bacbb7;">Checkpoint</span><span style="color:#7fff91;">best_model.pt</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- end grid -->
+  </main>
+</div>
+
+<script>
+// ── Feature column order (must match backend RAW_FEATURE_COLUMNS exactly) ──
+const FEATURES = ['rpe','duration_minutes','session_rpe','daily_load','weekly_load',
+  'fatigue','soreness','mood','readiness','sleep_duration','sleep_quality','stress',
+  'total_distance_m','high_speed_distance_m','sprint_distance_m','max_speed_m_s',
+  'mean_speed_m_s','prior_injury_count','has_prior_injury','is_rest_day','has_gps','illness_last_7d'];
+
+const API = 'http://localhost:8000';
+
+// Current slider state — these are "today's" values; we'll repeat them 14× with minor noise
+const state = {
+  rpe: 6.0, daily_load: 480, weekly_load: 2800,
+  total_distance_m: 8500, sprint_distance_m: 600,
+  fatigue: 4.0, soreness: 3.0, readiness: 7.0,
+  sleep_duration: 7.5, mood: 7.0, prior_injury_count: 0
+};
+
+// ── PRESETS ──────────────────────────────────────────────────────────────────
+const PRESETS = {
+  healthy:   { rpe:5,  daily_load:380,  weekly_load:2200, total_distance_m:7500, sprint_distance_m:400, fatigue:2.5, soreness:2,   readiness:8.5, sleep_duration:8.5, mood:8.5, prior_injury_count:0 },
+  moderate:  { rpe:7.5,daily_load:680,  weekly_load:4100, total_distance_m:10200,sprint_distance_m:900, fatigue:6.5, soreness:5.5, readiness:5.5, sleep_duration:6.5, mood:5.5, prior_injury_count:1 },
+  high:      { rpe:9,  daily_load:950,  weekly_load:5800, total_distance_m:12500,sprint_distance_m:1600,fatigue:8.5, soreness:8,   readiness:3.0, sleep_duration:5.0, mood:3.5, prior_injury_count:3 },
+  sleep:     { rpe:7,  daily_load:600,  weekly_load:3200, total_distance_m:9000, sprint_distance_m:700, fatigue:7,   soreness:5,   readiness:4,   sleep_duration:4.0, mood:4,   prior_injury_count:0 },
+  returning: { rpe:4,  daily_load:250,  weekly_load:1200, total_distance_m:5000, sprint_distance_m:150, fatigue:5,   soreness:6.5, readiness:4.5, sleep_duration:7.0, mood:5.5, prior_injury_count:4 },
+};
+
+function loadPreset(key) {
+  const p = PRESETS[key];
+  Object.assign(state, p);
+  for (const [k, v] of Object.entries(p)) {
+    const sl = document.getElementById('sl-' + k);
+    if (sl) sl.value = v;
+    updateSlider(k, v, true);
+  }
+  document.querySelectorAll('[id^="preset-"]').forEach(b => {
+    b.className = 'preset-btn';
+  });
+  const btn = document.getElementById('preset-' + key);
+  if (btn) btn.className = 'preset-btn ' + (key === 'high' ? 'active-high' : key === 'healthy' ? 'active-low' : '');
+  refreshAllSliderColors();
+}
+
+// ── SLIDER UTILS ──────────────────────────────────────────────────────────────
+const DISPLAY_FMT = {
+  rpe:               v => `${parseFloat(v).toFixed(1)} / 10`,
+  daily_load:        v => `${Math.round(v)} AU`,
+  weekly_load:       v => `${Math.round(v)} AU`,
+  total_distance_m:  v => `${Math.round(v)} m`,
+  sprint_distance_m: v => `${Math.round(v)} m`,
+  fatigue:           v => `${parseFloat(v).toFixed(1)} / 10`,
+  soreness:          v => `${parseFloat(v).toFixed(1)} / 10`,
+  readiness:         v => `${parseFloat(v).toFixed(1)} / 10`,
+  sleep_duration:    v => `${parseFloat(v).toFixed(1)} hrs`,
+  mood:              v => `${parseFloat(v).toFixed(1)} / 10`,
+  prior_injury_count:v => `${Math.round(v)}`,
+};
+
+function updateSlider(key, value, silent) {
+  state[key] = parseFloat(value);
+  const disp = document.getElementById('val-' + key);
+  if (disp && DISPLAY_FMT[key]) disp.textContent = DISPLAY_FMT[key](value);
+  refreshSliderColor(key);
+}
+
+function refreshSliderColor(key) {
+  const sl = document.getElementById('sl-' + key);
+  if (!sl) return;
+  const pct = ((sl.value - sl.min) / (sl.max - sl.min)) * 100;
+  const isDanger = key === 'rpe' && sl.value > 7.5
+    || key === 'fatigue' && sl.value > 6
+    || key === 'soreness' && sl.value > 6
+    || key === 'daily_load' && sl.value > 750
+    || key === 'sleep_duration' && sl.value < 5.5;
+  const color = isDanger ? '#ffb4ab' : '#10e760';
+  sl.style.background = `linear-gradient(to right, ${color} 0%, ${color} ${pct}%, #2f3542 ${pct}%, #2f3542 100%)`;
+}
+
+function refreshAllSliderColors() {
+  Object.keys(state).forEach(refreshSliderColor);
+}
+
+// ── BUILD SEQUENCE ─────────────────────────────────────────────────────────────
+// Build a 14-day sequence: days 1-13 are "baseline" (slight noise), day 14 is today's values
+function buildSequence() {
+  const rows = [];
+  for (let d = 0; d < 14; d++) {
+    const t = d / 13; // 0 = 13 days ago, 1 = today
+    // Gradually ramp toward today's values
+    const noise = () => (Math.random() - 0.5) * 0.08;
+    const row = FEATURES.map(f => {
+      let base;
+      if (f === 'rpe')               base = 5.0 + (state.rpe - 5.0) * t;
+      else if (f === 'session_rpe')  base = (5.0 + (state.rpe - 5.0) * t) * 65;
+      else if (f === 'duration_minutes') base = 65;
+      else if (f === 'daily_load')   base = 350 + (state.daily_load - 350) * t;
+      else if (f === 'weekly_load')  base = 2000 + (state.weekly_load - 2000) * t;
+      else if (f === 'fatigue')      base = 3.0 + (state.fatigue - 3.0) * t;
+      else if (f === 'soreness')     base = 2.5 + (state.soreness - 2.5) * t;
+      else if (f === 'mood')         base = 7.0 + (state.mood - 7.0) * t;
+      else if (f === 'readiness')    base = 7.5 + (state.readiness - 7.5) * t;
+      else if (f === 'sleep_duration') base = 7.5 + (state.sleep_duration - 7.5) * t;
+      else if (f === 'sleep_quality') base = 7.0;
+      else if (f === 'stress')       base = 3.0 + (state.fatigue - 3.0) * t * 0.6;
+      else if (f === 'total_distance_m') base = 7000 + (state.total_distance_m - 7000) * t;
+      else if (f === 'high_speed_distance_m') base = state.sprint_distance_m * 0.6;
+      else if (f === 'sprint_distance_m') base = 300 + (state.sprint_distance_m - 300) * t;
+      else if (f === 'max_speed_m_s')  base = 8.5;
+      else if (f === 'mean_speed_m_s') base = 2.8;
+      else if (f === 'prior_injury_count') base = state.prior_injury_count;
+      else if (f === 'has_prior_injury')   base = state.prior_injury_count > 0 ? 1 : 0;
+      else if (f === 'is_rest_day')        base = 0;
+      else if (f === 'has_gps')            base = 1;
+      else if (f === 'illness_last_7d')    base = 0;
+      else base = 0;
+      return base * (1 + noise());
+    });
+    rows.push(row);
+  }
+  return rows;
+}
+
+// ── APPLY RESULT ─────────────────────────────────────────────────────────────
+function applyResult(prob, category, attn) {
+  const pct = (prob * 100).toFixed(1);
+  const gauge  = document.getElementById('gauge-fill');
+  const pctEl  = document.getElementById('gauge-pct');
+  const badge  = document.getElementById('risk-badge');
+  const rec    = document.getElementById('recommendation');
+  const card   = document.getElementById('result-card');
+
+  // Gauge (circumference = 314.159)
+  const offset = (1 - prob) * 314.159;
+  gauge.style.strokeDashoffset = Math.max(0, offset).toFixed(2);
+
+  const isHigh = category === 'High' || category === 'Elevated';
+  const isMod  = category === 'Moderate';
+  gauge.style.stroke = isHigh ? '#ffb4ab' : isMod ? '#ffd700' : '#7fff91';
+  pctEl.textContent = pct + '%';
+  pctEl.style.color = isHigh ? '#ffb4ab' : isMod ? '#ffd700' : '#7fff91';
+
+  // Badge
+  const cls = isHigh ? 'badge-high' : isMod ? 'badge-moderate' : 'badge-low';
+  badge.className = 'badge ' + cls;
+  badge.textContent = category.toUpperCase() + ' RISK · ' + pct + '%';
+
+  // Card glow
+  card.className = 'card ' + (isHigh ? 'card-high' : 'card-low');
+
+  // Recommendation
+  const recs = {
+    'Low':      '✅ Athlete is fit to train. All biometric indicators within safe range. Normal session load permitted.',
+    'Moderate': '⚠️ Elevated workload detected. Recommend monitoring. Consider reducing high-speed running volume by 20%.',
+    'Elevated': '🟠 Pre-injury signals detected. Recommend active recovery session. Flag for physio assessment within 24hrs.',
+    'High':     '🔴 HIGH INJURY RISK. Immediate deload recommended. Restrict all sprint and high-impact activities. Schedule urgent physio screening.'
+  };
+  rec.textContent = recs[category] || recs['Moderate'];
+
+  // Attention heatmap
+  if (attn && attn.length > 0) {
+    const container = document.getElementById('attention-bars');
+    const max = Math.max(...attn);
+    container.innerHTML = attn.map((w, i) => {
+      const pctBar = ((w / max) * 100).toFixed(0);
+      const dayLabel = i === 13 ? 'Today' : `Day -${13-i}`;
+      const barColor = w > max * 0.7 ? '#ffb4ab' : w > max * 0.5 ? '#ffd700' : '#10e760';
+      return `<div style="display:flex;align-items:center;gap:8px;">
+        <span class="mono" style="font-size:10px;color:#bacbb7;width:48px;text-align:right;">${dayLabel}</span>
+        <div style="flex:1;background:#1a202c;border-radius:3px;overflow:hidden;height:5px;">
+          <div style="width:${pctBar}%;height:100%;background:${barColor};border-radius:3px;transition:width 0.5s;"></div>
+        </div>
+        <span class="mono" style="font-size:9px;color:#bacbb7;width:32px;">${(w*100).toFixed(1)}%</span>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('last-run-time').textContent = 'Model queried at ' + new Date().toLocaleTimeString();
+}
+
+// ── RUN PREDICTION ────────────────────────────────────────────────────────────
+async function runPrediction() {
+  const btn   = document.getElementById('run-btn');
+  const icon  = document.getElementById('run-icon');
+  const label = document.getElementById('run-label');
+
+  btn.disabled = true;
+  icon.classList.add('spin');
+  label.textContent = 'RUNNING TRANSFORMER ENCODER...';
+
+  // Reset gauge
+  document.getElementById('gauge-fill').style.strokeDashoffset = '314.159';
+  document.getElementById('gauge-pct').textContent = '--';
+  document.getElementById('risk-badge').textContent = 'Computing...';
+
+  try {
+    const sequence = buildSequence();
+    const res = await fetch(API + '/api/v1/predictions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ athlete_id: 'DEMO', sequence })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    const data = await res.json();
+    applyResult(data.predicted_probability, data.risk_category, data.attention_weights || []);
+  } catch(e) {
+    document.getElementById('recommendation').textContent = '⚠️ Could not reach backend: ' + e.message + '. Make sure FastAPI is running on port 8000.';
+    document.getElementById('gauge-pct').textContent = 'ERR';
+  } finally {
+    btn.disabled = false;
+    icon.classList.remove('spin');
+    label.textContent = 'RUN INJURY RISK PREDICTION';
+  }
+}
+
+// ── BACKEND STATUS CHECK ──────────────────────────────────────────────────────
+async function checkBackend() {
+  try {
+    const r = await fetch(API + '/api/v1/dashboard/model-info', { signal: AbortSignal.timeout(3000) });
+    document.getElementById('backend-status').textContent = r.ok ? 'Online' : 'Error';
+  } catch {
+    document.getElementById('backend-status').textContent = 'Offline';
+    document.getElementById('backend-status').style.color = '#ffb4ab';
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+refreshAllSliderColors();
+checkBackend();
+</script>
+</body>
+</html>
